@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "133889715579",
+    "project_id": "flutter-school-7f63e",
+    "storage_bucket": "flutter-school-7f63e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:133889715579:android:cda3af6c6f8c59afe1a1de",
+        "android_client_info": {
+          "package_name": "com.qwerty.fl_school"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBpzDKtdS2Iy_HkbLQAJLNdbiDgL7xUqmY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
