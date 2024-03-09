@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 
 Color get colorPrimary => Color(0xff0c46c4) ;
 Color get colorSecendry => Color(0xff28c2a0) ;
+Color get colorSecendryLight => Color(0x84b0e7db) ;
 Color get colorBlack => Color(0xff000000) ;
 Color get colorGray => Color(0xff646262) ;
 Color get colorBackground => Color(0xffecf8ef) ;
 Color get colorCard => Color(0xFFF3F5F7) ;
 Color get colorRed => Color(0xffef0707) ;
+Color get colorGreen => Color(0xff06520a) ;
 Color get colorDivider => Color(0xFFF1F1F5) ;
 
 

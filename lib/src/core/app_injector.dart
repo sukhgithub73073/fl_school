@@ -1,7 +1,12 @@
 import 'dart:async';
 
+import 'package:fl_school/src/data/repository/classes_repo.dart';
+import 'package:fl_school/src/data/repository/groups_repo.dart';
 import 'package:fl_school/src/data/repository/pincode_repo.dart';
 import 'package:fl_school/src/data/repository/school_repo.dart';
+import 'package:fl_school/src/data/repository/student_repo.dart';
+import 'package:fl_school/src/data/repository/subject_repo.dart';
+import 'package:fl_school/src/data/repository/teacher_repo.dart';
 import 'package:flutter/material.dart';
 
 import 'package:fl_school/src/data/repository/login%20_repo.dart';
@@ -24,6 +29,11 @@ class AppInjector {
     GetIt.I.registerSingleton<RegisterRepository>(RegisterRepositoryImp());
     GetIt.I.registerSingleton<SchoolRepository>(SchoolRepositoryImp());
     GetIt.I.registerSingleton<PincodeRepository>(PincodeRepositoryImp());
+    GetIt.I.registerSingleton<GroupsRepository>(GroupsRepositoryImp());
+    GetIt.I.registerSingleton<ClassesRepository>(ClassesRepositoryImp());
+    GetIt.I.registerSingleton<TeacherRepository>(TeacherRepositoryImp());
+    GetIt.I.registerSingleton<StudentRepository>(StudentRepositoryImp());
+    GetIt.I.registerSingleton<SubjectRepository>(SubjectRepositoryImp());
 
     GetIt.I.registerSingleton<ProductRepository>(ProductRepositoryImp());
     GetIt.I.registerSingleton<GlobalKey<NavigatorState>>(GlobalKey<NavigatorState>());

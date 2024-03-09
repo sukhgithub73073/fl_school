@@ -1,5 +1,11 @@
+import 'package:fl_school/src/data/blocs/classes_bloc/classes_bloc.dart';
 import 'package:fl_school/src/data/blocs/detail_bloc/detail_bloc.dart';
+import 'package:fl_school/src/data/blocs/groups_bloc/groups_bloc.dart';
 import 'package:fl_school/src/data/blocs/pincode_bloc/pincode_bloc.dart';
+import 'package:fl_school/src/data/blocs/role_bloc/role_bloc.dart';
+import 'package:fl_school/src/data/blocs/student_bloc/student_bloc.dart';
+import 'package:fl_school/src/data/blocs/subject_bloc/subject_bloc.dart';
+import 'package:fl_school/src/data/blocs/teacher_bloc/teacher_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import 'package:fl_school/src/data/blocs/dashboard_bloc/dashboard_bloc.dart';
@@ -26,10 +32,16 @@ class AppBlocProvider extends StatelessWidget {
       providers: [
         BlocProvider(
             lazy: lazy, create: (_) => DashboardBloc()..add(DoLoadList())),
+        BlocProvider(lazy: lazy, create: (_) => RoleBloc()),
         BlocProvider(lazy: lazy, create: (_) => LoginBloc()),
         BlocProvider(lazy: lazy, create: (_) => DetailBloc()),
         BlocProvider(lazy: lazy, create: (_) => RegisterBloc()),
         BlocProvider(lazy: lazy, create: (_) => PincodeBloc()),
+        BlocProvider(lazy: lazy, create: (_) => GroupsBloc()),
+        BlocProvider(lazy: lazy, create: (_) => ClassesBloc()),
+        BlocProvider(lazy: lazy, create: (_) => TeacherBloc()),
+        BlocProvider(lazy: lazy, create: (_) => StudentBloc()),
+        BlocProvider(lazy: lazy, create: (_) => SubjectBloc()),
 
 
         BlocProvider(

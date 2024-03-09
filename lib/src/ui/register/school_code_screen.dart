@@ -10,9 +10,11 @@ import 'package:fl_school/src/core/common_space.dart';
 import 'package:fl_school/src/core/text_view.dart';
 import 'package:fl_school/src/data/blocs/detail_bloc/detail_bloc.dart';
 import 'package:fl_school/src/data/blocs/login_bloc/login_bloc.dart';
+import 'package:fl_school/src/data/blocs/role_bloc/role_bloc.dart';
 import 'package:fl_school/src/extension/app_extension.dart';
 import 'package:fl_school/src/ui/dashboard/main_screen.dart';
 import 'package:fl_school/src/ui/register/register_screen.dart';
+import 'package:fl_school/src/ui/register/teacher_register_screen.dart';
 import 'package:fl_school/src/utility/validation_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -82,32 +84,38 @@ class _SchoolCodeScreenState extends State<SchoolCodeScreen> {
                       hintFontWeight: FontWeight.w400,
                       hintTextColor: colorGray.withOpacity(0.6)),
                   spaceVertical(space: 20.h),
-                  BlocConsumer<DetailBloc, DetailState>(
-                    listener: (context, state) {
-                      if (state is DetailSuccess) {
-                        context.pushReplacementScreen(
-                            nextScreen: RegisterScreen());
-                      }
+                  BlocConsumer<RoleBloc, RoleState>(
+                    listener: (context, roleState) {
+
                     },
-                    builder: (context, state) {
-                      return Container(
-                        height: 40.h,
-                        width: double.infinity,
-                        decoration: BoxDecoration(color: colorPrimary),
-                        child: AppSimpleButton(
-                          onDoneFuction: () async {
-                            if (!ValidationUtil.emailValidation(
-                                email: codeController.text)) {
-                            } else {
-                              context
-                                  .read<DetailBloc>()
-                                  .add(VerifyDetailEvent(map: {}));
-                            }
-                          },
-                          buttonBackgroundColor: colorPrimary,
-                          nameText: "Verify",
-                          textSize: 18.sp,
-                        ),
+                    builder: (context, roleState) {
+                      return BlocConsumer<DetailBloc, DetailState>(
+                        listener: (context, state) {
+                          if (state is DetailSuccess) {
+                            context.pushReplacementScreen(
+                                nextScreen: roleState is RoleTeacher ? TeacherRegisterScreen() : RegisterScreen());
+                          }
+                        },
+                        builder: (context, state) {
+                          return Container(
+                            height: 40.h,
+                            width: double.infinity,
+                            decoration: BoxDecoration(color: colorPrimary),
+                            child: AppSimpleButton(
+                              onDoneFuction: () async {
+                                if (!ValidationUtil.emailValidation(
+                                    email: codeController.text)) {} else {
+                                  context
+                                      .read<DetailBloc>()
+                                      .add(VerifyDetailEvent(map: {}));
+                                }
+                              },
+                              buttonBackgroundColor: colorPrimary,
+                              nameText: "Verify",
+                              textSize: 18.sp,
+                            ),
+                          );
+                        },
                       );
                     },
                   ),
@@ -116,7 +124,7 @@ class _SchoolCodeScreenState extends State<SchoolCodeScreen> {
                     onTap: () {},
                     child: TextView(
                       text:
-                          "School codes typically refer to alphanumeric identifiers assigned to educational institutions or specific elements within them, such as institutional codes for standardized testing or course codes for individual classes.",
+                      "School codes typically refer to alphanumeric identifiers assigned to educational institutions or specific elements within them, such as institutional codes for standardized testing or course codes for individual classes.",
                       color: colorGray,
                       textSize: 12.sp,
                       textAlign: TextAlign.center,
