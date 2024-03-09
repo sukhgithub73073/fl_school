@@ -2,11 +2,18 @@ import 'package:fl_school/src/core/app_assets.dart';
 import 'package:fl_school/src/core/app_dialog.dart';
 import 'package:fl_school/src/core/app_strings.dart';
 import 'package:fl_school/src/core/dialog_widgets/failure_message_dialog.dart';
+import 'package:fl_school/src/core/dialog_widgets/success_message_dialog.dart';
+import 'package:fl_school/src/core/drop_down/drop_list_model.dart';
+import 'package:fl_school/src/core/drop_down/select_drop_list.dart';
+import 'package:fl_school/src/data/blocs/classes_bloc/classes_bloc.dart';
+import 'package:fl_school/src/data/blocs/groups_bloc/groups_bloc.dart';
 import 'package:fl_school/src/data/blocs/pincode_bloc/pincode_bloc.dart';
 import 'package:fl_school/src/data/blocs/register_bloc/register_bloc.dart';
 import 'package:fl_school/src/data/models/pincode_model.dart';
 import 'package:fl_school/src/ui/dashboard/main_screen.dart';
+import 'package:fl_school/src/utility/app_util.dart';
 import 'package:fl_school/src/utility/validation_util.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -36,9 +43,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
   var motherController = TextEditingController(text: "Geboo Kaur");
   var emailController = TextEditingController(text: "sukhmander@gmail.com");
   var pincodeController = TextEditingController(text: "");
-
+  var addressController = TextEditingController(text: "");
   var passwordController = TextEditingController(text: "Qwerty@123");
   var selectedPostOffice;
+  var selectedGroup ;
+  var selectedClass ;
 
   @override
   Widget build(BuildContext context) {
@@ -77,6 +86,64 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 15.w),
                       child: Column(
                         children: [
+
+                          BlocConsumer<GroupsBloc, GroupsState>(
+                            listener: (context, state) {},
+                            builder: (context, state) {
+                              if (state is GroupsSuccess) {
+                                printLog(
+                                    "builder >>>>>>>>>>>>>>>>>${state is GroupsSuccess}");
+                                List<OptionItem> list = [];
+                                state.responseModel.data.forEach((element) {
+                                  list.add(OptionItem(
+                                      id: "${element["group_id"]}",
+                                      title: "${element["group_name"]}"));
+                                });
+
+                                return SelectDropList(
+                                  list: list,
+                                  onSelect: (item) {
+                                    selectedGroup = item ;
+                                    context
+                                        .read<ClassesBloc>()
+                                        .add(GetClassesByGroupEvent(map: {
+                                      "school_code": "GSSS19543",
+                                      "group_id": item.id ?? "",
+                                    }));
+                                  },
+                                );
+                              } else {
+                                return SizedBox.shrink();
+                              }
+                            },
+                          ),
+                          spaceVertical(space: 10.h),
+
+                          BlocConsumer<ClassesBloc, ClassesState>(
+                            listener: (context, state) {},
+                            builder: (context, state) {
+                              if (state is ClassesGetSuccess) {
+                                List<OptionItem> list = [];
+                                state.responseModel.data.forEach((element) {
+                                  list.add(OptionItem(
+                                      id: "${element["class_id"]}",
+                                      title: "${element["class_name"]}"));
+                                });
+
+                                return SelectDropList(
+                                  list: list,
+                                  onSelect: (item) {
+                                    selectedClass = item ;
+                                  },
+                                );
+                              } else {
+                                return SizedBox.shrink();
+                              }
+                            },
+                          ),
+
+                          spaceVertical(space: 20.h),
+
                           CustomTextField(
                               controller: emailController,
                               textInputAction: TextInputAction.next,
@@ -144,7 +211,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 appDialog(
                                     context: context,
                                     child: ErrorDailog(
-                                      onTap: () {context.back();},
+                                      title: "Invalid Pincode",
+                                      onTap: () {
+                                        context.back();
+                                      },
                                       message: "${state.error}",
                                     ));
                               }
@@ -196,95 +266,119 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             builder: (context, state) {
                               if (state is PincodeSuccess) {
                                 return Column(
-                                        children: [
-                                          spaceVertical(space: 20.h),
-                                          FormField<String>(
-                                            builder:
-                                                (FormFieldState<String> s) {
-                                              return InputDecorator(
-                                                decoration: InputDecoration(
-                                                    contentPadding:
-                                                        EdgeInsets.fromLTRB(
-                                                            12, 10, 20, 20),
-                                                    errorStyle: TextStyle(
-                                                        color: Colors.redAccent,
-                                                        fontSize: 16.0),
-                                                    border: OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius
-                                                                .circular(
-                                                                    10.0))),
-                                                child:
-                                                    DropdownButtonHideUnderline(
-                                                  child: DropdownButton<
-                                                      PostOffice>(
-                                                    style: TextStyle(
-                                                      fontSize: 16,
-                                                      color: Colors.grey,
-                                                    ),
-                                                    hint: Text(
-                                                      "Select City",
-                                                      style: TextStyle(
-                                                        color: Colors.grey,
-                                                        fontSize: 16,
-                                                      ),
-                                                    ),
-                                                    items: state.responseModel
-                                                        .data[0].postOffice
-                                                        .map<
-                                                                DropdownMenuItem<
-                                                                    PostOffice>>(
-                                                            (PostOffice value) {
-                                                      return DropdownMenuItem(
-                                                        value: value,
-                                                        child: Row(
-                                                          children: [
-                                                            TextView(
-                                                              text:
-                                                                  "${value.name}",
-                                                              color: colorGray,
-                                                              textSize: 12.sp,
-                                                              textAlign:
-                                                                  TextAlign
-                                                                      .center,
-                                                              style:
-                                                                  AppTextStyleEnum
-                                                                      .medium,
-                                                              fontFamily:
-                                                                  Family.medium,
-                                                              lineHeight: 1.3,
-                                                            )
-                                                          ],
-                                                        ),
-                                                      );
-                                                    }).toList(),
-                                                    isExpanded: true,
-                                                    isDense: true,
-                                                    onChanged: (selectedItem) {
-                                                      setState(() {
-                                                        selectedPostOffice =
-                                                            selectedItem;
-                                                      });
-                                                    },
-                                                    value: selectedPostOffice,
-                                                  ),
+                                  children: [
+                                    spaceVertical(space: 20.h),
+                                    FormField<String>(
+                                      builder: (FormFieldState<String> s) {
+                                        return InputDecorator(
+                                          decoration: InputDecoration(
+                                              contentPadding:
+                                                  EdgeInsets.fromLTRB(
+                                                      12, 10, 20, 20),
+                                              errorStyle: TextStyle(
+                                                  color: Colors.redAccent,
+                                                  fontSize: 16.0),
+                                              border: OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(
+                                                          10.0))),
+                                          child: DropdownButtonHideUnderline(
+                                            child: DropdownButton<PostOffice>(
+                                              style: TextStyle(
+                                                fontSize: 16,
+                                                color: Colors.grey,
+                                              ),
+                                              hint: Text(
+                                                "Select City",
+                                                style: TextStyle(
+                                                  color: Colors.grey,
+                                                  fontSize: 16,
                                                 ),
-                                              );
-                                            },
+                                              ),
+                                              items: state.responseModel.data[0]
+                                                  .postOffice
+                                                  .map<
+                                                          DropdownMenuItem<
+                                                              PostOffice>>(
+                                                      (PostOffice value) {
+                                                return DropdownMenuItem(
+                                                  value: value,
+                                                  child: Row(
+                                                    children: [
+                                                      TextView(
+                                                        text: "${value.name}",
+                                                        color: colorGray,
+                                                        textSize: 12.sp,
+                                                        textAlign:
+                                                            TextAlign.center,
+                                                        style: AppTextStyleEnum
+                                                            .medium,
+                                                        fontFamily:
+                                                            Family.medium,
+                                                        lineHeight: 1.3,
+                                                      )
+                                                    ],
+                                                  ),
+                                                );
+                                              }).toList(),
+                                              isExpanded: true,
+                                              isDense: true,
+                                              onChanged: (selectedItem) {
+                                                setState(() {
+                                                  selectedPostOffice =
+                                                      selectedItem;
+                                                });
+                                              },
+                                              value: selectedPostOffice,
+                                            ),
                                           ),
-                                        ],
-                                      );
+                                        );
+                                      },
+                                    ),
+                                  ],
+                                );
                               } else {
                                 return SizedBox.shrink();
                               }
                             },
                           ),
+                          spaceVertical(space: 20.h),
+                          CustomTextField(
+                              controller: addressController,
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.text,
+                              paddingHorizontal: 20.0,
+                              hasViewHight: false,
+                              labelText: "Address",
+                              hintText: "Address Here",
+                              numberOfLines: 1,
+                              hintFontWeight: FontWeight.w400,
+                              hintTextColor: colorGray.withOpacity(0.6)),
                           spaceVertical(space: 30.h),
                           BlocConsumer<RegisterBloc, RegisterState>(
                             listener: (context, state) {
                               if (state is RegisterSuccess) {
-                                context.pushReplacementScreen(
-                                    nextScreen: MainScreen());
+                                appDialog(
+                                    context: context,
+                                    child: SuccessDailog(
+                                      title: "Successfully",
+                                      onTap: () {
+                                        context.back();
+                                        context.back();
+                                      },
+                                      message: "${state.userModel.message}",
+                                    ));
+                              }
+                              else if (state is RegisterError) {
+                                appDialog(
+                                    context: context,
+                                    child: ErrorDailog(
+                                      title: "Error",
+                                      onTap: () {
+                                        context.back();
+                                      },
+                                      message: "${state.error}",
+                                    ));
                               }
                             },
                             builder: (context, state) {
@@ -301,9 +395,22 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                             password:
                                                 passwordController.text)) {
                                     } else {
+                                      var map = {
+                                        "school_code": "GSSS19543",
+                                        "role_type": "Student",
+                                        "email": emailController.text,
+                                        "password": passwordController.text,
+                                        "name": nameController.text,
+                                        "father_name": fatherController.text,
+                                        "mother_name": motherController.text,
+                                        "pincode": pincodeController.text,
+                                        "district": selectedPostOffice.district,
+                                        "city": selectedPostOffice.name,
+                                        "address": addressController.text
+                                      };
                                       context
                                           .read<RegisterBloc>()
-                                          .add(DoRegisterEvent(map: {}));
+                                          .add(DoRegisterEvent(map: map));
                                     }
                                   },
                                   buttonBackgroundColor: colorPrimary,

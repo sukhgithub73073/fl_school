@@ -6,6 +6,10 @@ extension NavigatorContext on BuildContext {
     Navigator.pop(this);
   }
 
+  dissmissLoading() {
+    Navigator.pop(this);
+  }
+
   pushScreen({required Widget nextScreen}) {
     Navigator.push(this, MaterialPageRoute(builder: (context) => nextScreen));
   }
