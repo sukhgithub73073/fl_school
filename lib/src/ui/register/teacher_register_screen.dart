@@ -34,13 +34,13 @@ class TeacherRegisterScreen extends StatefulWidget {
 }
 
 class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
-  var nameController = TextEditingController(text: "Sukhmander Singh");
-  var fatherController = TextEditingController(text: "Kartar Singh");
-  var motherController = TextEditingController(text: "Geboo Kaur");
-  var emailController = TextEditingController(text: "sukhmander@gmail.com");
+  var nameController = TextEditingController(text: "");
+  var fatherController = TextEditingController(text: "");
+  var motherController = TextEditingController(text: "");
+  var emailController = TextEditingController(text: "");
   var pincodeController = TextEditingController(text: "");
   var addressController = TextEditingController(text: "");
-  var passwordController = TextEditingController(text: "Qwerty@123");
+  var passwordController = TextEditingController(text: "");
   var selectedPostOffice;
 
   @override
@@ -86,8 +86,8 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                               keyboardType: TextInputType.text,
                               paddingHorizontal: 20.0,
                               hasViewHight: false,
-                              labelText: "Email",
-                              hintText: "Email Here",
+                              labelText: "email",
+                              hintText: "emailHere",
                               numberOfLines: 1,
                               hintFontWeight: FontWeight.w400,
                               hintTextColor: colorGray.withOpacity(0.6)),
@@ -98,7 +98,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                               keyboardType: TextInputType.text,
                               paddingHorizontal: 20.0,
                               hasViewHight: false,
-                              labelText: "Password",
+                              labelText: "password",
                               hintText: "***********",
                               numberOfLines: 1,
                               borderColor: colorInputBorder,
@@ -111,8 +111,8 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                               keyboardType: TextInputType.text,
                               paddingHorizontal: 20.0,
                               hasViewHight: false,
-                              labelText: "Name",
-                              hintText: "Name Here",
+                              labelText: "name",
+                              hintText: "nameHere",
                               numberOfLines: 1,
                               hintFontWeight: FontWeight.w400,
                               hintTextColor: colorGray.withOpacity(0.6)),
@@ -123,8 +123,8 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                               keyboardType: TextInputType.text,
                               paddingHorizontal: 20.0,
                               hasViewHight: false,
-                              labelText: "Father Name",
-                              hintText: "Father Name Here",
+                              labelText: "fatherName",
+                              hintText: "fatherNameHere",
                               numberOfLines: 1,
                               hintFontWeight: FontWeight.w400,
                               hintTextColor: colorGray.withOpacity(0.6)),
@@ -135,8 +135,8 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                               keyboardType: TextInputType.text,
                               paddingHorizontal: 20.0,
                               hasViewHight: false,
-                              labelText: "Mother Name",
-                              hintText: "Mother Name Here",
+                              labelText: "motherName",
+                              hintText: "motherNameHere",
                               numberOfLines: 1,
                               hintFontWeight: FontWeight.w400,
                               hintTextColor: colorGray.withOpacity(0.6)),
@@ -147,7 +147,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                                 appDialog(
                                     context: context,
                                     child: ErrorDailog(
-                                      title: "Invalid Pincode",
+                                      title: "invalidPincode",
                                       onTap: () {
                                         context.back();
                                       },
@@ -164,8 +164,8 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                                       keyboardType: TextInputType.number,
                                       paddingHorizontal: 20.0,
                                       hasViewHight: false,
-                                      labelText: "Pincode",
-                                      hintText: "Pincode Here",
+                                      labelText: "pincode",
+                                      hintText: "pincodeHere",
                                       numberOfLines: 1,
                                       hintFontWeight: FontWeight.w400,
                                       onChanged: (e) {
@@ -225,7 +225,7 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                                                 color: Colors.grey,
                                               ),
                                               hint: Text(
-                                                "Select City",
+                                                "selectCity",
                                                 style: TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 16,
@@ -285,8 +285,8 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                               keyboardType: TextInputType.text,
                               paddingHorizontal: 20.0,
                               hasViewHight: false,
-                              labelText: "Address",
-                              hintText: "Address Here",
+                              labelText: "address",
+                              hintText: "addressHere",
                               numberOfLines: 1,
                               hintFontWeight: FontWeight.w400,
                               hintTextColor: colorGray.withOpacity(0.6)),
@@ -297,19 +297,18 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                                 appDialog(
                                     context: context,
                                     child: SuccessDailog(
-                                      title: "Successfully",
+                                      title: "successfully",
                                       onTap: () {
                                         context.back();
                                         context.back();
                                       },
                                       message: "${state.userModel.message}",
                                     ));
-                              }
-                              else if (state is RegisterError) {
+                              } else if (state is RegisterError) {
                                 appDialog(
                                     context: context,
                                     child: ErrorDailog(
-                                      title: "Error",
+                                      title: "error",
                                       onTap: () {
                                         context.back();
                                       },
@@ -349,25 +348,13 @@ class _TeacherRegisterScreenState extends State<TeacherRegisterScreen> {
                                     }
                                   },
                                   buttonBackgroundColor: colorPrimary,
-                                  nameText: "Register",
+                                  nameText: "register",
                                   textSize: 18.sp,
                                 ),
                               );
                             },
                           ),
                           spaceVertical(space: 10.h),
-                          TapWidget(
-                            onTap: () {},
-                            child: TextView(
-                              text: "Have an account ? Login",
-                              color: colorGray,
-                              textSize: 12.sp,
-                              textAlign: TextAlign.center,
-                              style: AppTextStyleEnum.medium,
-                              fontFamily: Family.medium,
-                              lineHeight: 1.3,
-                            ),
-                          )
                         ],
                       ),
                     )

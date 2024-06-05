@@ -6,9 +6,6 @@ import 'package:fl_school/src/core/app_loader.dart';
 import 'package:fl_school/src/core/app_tap_widget.dart';
 import 'package:fl_school/src/core/app_text_style.dart';
 import 'package:fl_school/src/core/common_space.dart';
-import 'package:fl_school/src/core/dialog_widgets/failure_message_dialog.dart';
-import 'package:fl_school/src/core/drop_down/drop_list_model.dart';
-import 'package:fl_school/src/core/drop_down/select_drop_list.dart';
 import 'package:fl_school/src/core/text_view.dart';
 
 import 'package:fl_school/src/data/blocs/groups_bloc/groups_bloc.dart';
@@ -81,7 +78,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 40),
                                   child: TextView(
-                                    text: "No Records found",
+                                    text: "noRecordsFound",
                                     color: colorBlack,
                                     textSize: 12.sp,
                                     textAlign: TextAlign.center,
@@ -134,7 +131,7 @@ class _SubjectScreenState extends State<SubjectScreen> {
                     ),
                     spaceHorizontal(space: 10.w),
                     TextView(
-                      text: "Subject",
+                      text: "subject",
                       color: colorWhite,
                       textSize: 16.sp,
                       textAlign: TextAlign.center,

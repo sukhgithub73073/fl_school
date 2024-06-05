@@ -4,10 +4,7 @@ import 'package:fl_school/src/core/app_image_view.dart';
 import 'package:fl_school/src/core/app_loader.dart';
 import 'package:fl_school/src/core/dialog_widgets/failure_message_dialog.dart';
 import 'package:fl_school/src/core/dialog_widgets/success_message_dialog.dart';
-import 'package:fl_school/src/core/drop_down/drop_list_model.dart';
-import 'package:fl_school/src/core/drop_down/select_drop_list.dart';
 
-import 'package:fl_school/src/data/blocs/groups_bloc/groups_bloc.dart';
 import 'package:fl_school/src/data/blocs/role_bloc/role_bloc.dart';
 import 'package:fl_school/src/data/blocs/subject_bloc/subject_bloc.dart';
 import 'package:fl_school/src/utility/app_util.dart';
@@ -83,7 +80,7 @@ class _CreateSubjectScreenState extends State<CreateSubjectScreen> {
                         Row(
                           children: [
                             TextView(
-                              text: "Welcome Message",
+                              text: "welcomeMessage",
                               color: colorWhite,
                               textSize: 15.sp,
                               textAlign: TextAlign.left,
@@ -101,7 +98,7 @@ class _CreateSubjectScreenState extends State<CreateSubjectScreen> {
                         spaceVertical(space: 10.h),
                         TextView(
                           text:
-                              "The standard Lorem Ipsum passage Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                              "welcomeDescription",
                           color: colorWhite,
                           textSize: 13.sp,
                           textAlign: TextAlign.left,
@@ -123,8 +120,8 @@ class _CreateSubjectScreenState extends State<CreateSubjectScreen> {
                           keyboardType: TextInputType.text,
                           paddingHorizontal: 20.0,
                           hasViewHight: false,
-                          labelText: "Subject Name",
-                          hintText: "Subject Name Here",
+                          labelText: "subjectName",
+                          hintText: "subjectNameHere",
                           numberOfLines: 1,
                           hintFontWeight: FontWeight.w400,
                           hintTextColor: colorGray.withOpacity(0.6)),
@@ -145,7 +142,7 @@ class _CreateSubjectScreenState extends State<CreateSubjectScreen> {
                             appDialog(
                                 context: context,
                                 child: SuccessDailog(
-                                  title: "Successfully",
+                                  title: "successfully",
                                   onTap: () {
                                     context.back();
                                     context.back();
@@ -158,7 +155,7 @@ class _CreateSubjectScreenState extends State<CreateSubjectScreen> {
                             appDialog(
                                 context: context,
                                 child: ErrorDailog(
-                                  title: "Error",
+                                  title: "error",
                                   onTap: () {
                                     context.back();
                                   },
@@ -185,7 +182,7 @@ class _CreateSubjectScreenState extends State<CreateSubjectScreen> {
                                 }
                               },
                               buttonBackgroundColor: colorPrimary,
-                              nameText: "Create",
+                              nameText: "create",
                               textSize: 18.sp,
                             ),
                           );
@@ -211,7 +208,7 @@ class _CreateSubjectScreenState extends State<CreateSubjectScreen> {
                     ),
                     spaceHorizontal(space: 10.w),
                     TextView(
-                      text: "Create Subject",
+                      text: "createSubject",
                       color: colorWhite,
                       textSize: 16.sp,
                       textAlign: TextAlign.center,

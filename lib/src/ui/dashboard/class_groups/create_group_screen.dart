@@ -74,7 +74,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         Row(
                           children: [
                             TextView(
-                              text: "Welcome Message",
+                              text: "welcomeMessage",
                               color: colorWhite,
                               textSize: 15.sp,
                               textAlign: TextAlign.left,
@@ -92,7 +92,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         spaceVertical(space: 10.h),
                         TextView(
                           text:
-                              "The standard Lorem Ipsum passage Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                              "welcomeDescription",
                           color: colorWhite,
                           textSize: 13.sp,
                           textAlign: TextAlign.left,
@@ -113,8 +113,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                           keyboardType: TextInputType.text,
                           paddingHorizontal: 20.0,
                           hasViewHight: false,
-                          labelText: "Group Name",
-                          hintText: "Group Name Here",
+                          labelText: "groupName",
+                          hintText: "groupNameHere",
                           numberOfLines: 1,
                           hintFontWeight: FontWeight.w400,
                           hintTextColor: colorGray.withOpacity(0.6)),
@@ -136,7 +136,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             appDialog(
                                 context: context,
                                 child: SuccessDailog(
-                                  title: "Successfully",
+                                  title: "successfully",
                                   onTap: () {
                                     context.back();
                                     context.back();
@@ -149,7 +149,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             appDialog(
                                 context: context,
                                 child: ErrorDailog(
-                                  title: "Error",
+                                  title: "error",
                                   onTap: () {
                                     context.back();
                                   },
@@ -176,7 +176,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                                 }
                               },
                               buttonBackgroundColor: colorPrimary,
-                              nameText: "Create",
+                              nameText: "create",
                               textSize: 18.sp,
                             ),
                           );
@@ -202,7 +202,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     ),
                     spaceHorizontal(space: 10.w),
                     TextView(
-                      text: "Create Groups",
+                      text: "createGroups",
                       color: colorWhite,
                       textSize: 16.sp,
                       textAlign: TextAlign.center,

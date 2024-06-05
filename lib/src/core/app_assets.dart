@@ -6,6 +6,7 @@ class AppAssets {
   static const String teacher = "assets/images/teacher.png";
   static const String principal = "assets/images/principal.png";
   static const String userPlaceholder = "assets/images/user_placeholder.png";
+  static const String changeLanguageIcon = "assets/images/change_language_icon.png";
 
 
 

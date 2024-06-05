@@ -1,9 +1,11 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_school/src/data/blocs/classes_bloc/classes_bloc.dart';
 import 'package:fl_school/src/data/blocs/groups_bloc/groups_bloc.dart';
 import 'package:fl_school/src/data/blocs/student_bloc/student_bloc.dart';
 import 'package:fl_school/src/data/blocs/subject_bloc/subject_bloc.dart';
 import 'package:fl_school/src/data/blocs/teacher_bloc/teacher_bloc.dart';
 import 'package:fl_school/src/extension/app_extension.dart';
+import 'package:fl_school/src/ui/choose_language_screen.dart';
 import 'package:fl_school/src/ui/dashboard/class_groups/classes_screen.dart';
 import 'package:fl_school/src/ui/dashboard/class_groups/groups_screen.dart';
 import 'package:fl_school/src/ui/dashboard/students/student_screen.dart';
@@ -38,20 +40,20 @@ class _MainScreenState extends State<MainScreen> {
     super.initState();
 
     context.read<SubjectBloc>().add(GetSubjectEvent(map: {
-      "school_code": "GSSS19543",
-    }));
+          "school_code": "GSSS19543",
+        }));
     context.read<StudentBloc>().add(GetStudentEvent(map: {
-      "school_code": "GSSS19543",
-    }));
+          "school_code": "GSSS19543",
+        }));
     context.read<TeacherBloc>().add(GetTeacherEvent(map: {
-      "school_code": "GSSS19543",
-    }));
+          "school_code": "GSSS19543",
+        }));
     context.read<GroupsBloc>().add(GetGroupsEvent(map: {
-      "school_code": "GSSS19543",
-    }));
+          "school_code": "GSSS19543",
+        }));
     context.read<ClassesBloc>().add(GetClassesEvent(map: {
-      "school_code": "GSSS19543",
-    }));
+          "school_code": "GSSS19543",
+        }));
   }
 
   @override
@@ -60,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
       key: _key,
       backgroundColor: colorWhite,
       drawerEnableOpenDragGesture: true,
-      drawer: DrawerScreen(),
+      drawer: Container(width: 250.w, child: DrawerScreen()),
       body: Stack(
         children: [
           ImageView(
@@ -99,7 +101,7 @@ class _MainScreenState extends State<MainScreen> {
                     Row(
                       children: [
                         TextView(
-                          text: "Welcome Message",
+                          text: "welcomeMessage",
                           color: colorWhite,
                           textSize: 15.sp,
                           textAlign: TextAlign.left,
@@ -116,8 +118,7 @@ class _MainScreenState extends State<MainScreen> {
                     ),
                     spaceVertical(space: 10.h),
                     TextView(
-                      text:
-                      "The standard Lorem Ipsum passage Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                      text: "welcomeDescription",
                       color: colorWhite,
                       textSize: 13.sp,
                       textAlign: TextAlign.left,
@@ -144,14 +145,11 @@ class _MainScreenState extends State<MainScreen> {
                             color: colorSecendryLight,
                             borderRadius: BorderRadius.circular(5.r)),
                         child: Center(
-                          child: ImageView(
-                            size: 50,
-                            margin: EdgeInsets.all(15.w),
-                            url: AppAssets.student,
-                            tintColor: colorPrimary,
-                            imageType: ImageType.asset,
-                          ),
-                        ),
+                            child: Icon(
+                          Icons.groups,
+                          size: 50,
+                          color: colorPrimary,
+                        )),
                       ),
                     ),
                     spaceVertical(space: 5.h),
@@ -160,8 +158,8 @@ class _MainScreenState extends State<MainScreen> {
                       builder: (context, state) {
                         return TextView(
                           text: state is TeacherGetSuccess
-                              ? "Teacher (${state.responseModel.data.length})"
-                              : "Teacher (--)",
+                              ? "${tr("staff")} (${state.responseModel.data.length})"
+                              : "${tr("staff")} (--)",
                           color: colorPrimary,
                           textSize: 15.sp,
                           textAlign: TextAlign.center,
@@ -186,12 +184,10 @@ class _MainScreenState extends State<MainScreen> {
                             color: colorSecendryLight,
                             borderRadius: BorderRadius.circular(5.r)),
                         child: Center(
-                          child: ImageView(
+                          child: Icon(
+                            Icons.manage_accounts,
                             size: 50,
-                            margin: EdgeInsets.all(15.w),
-                            url: AppAssets.student,
-                            tintColor: colorPrimary,
-                            imageType: ImageType.asset,
+                            color: colorPrimary,
                           ),
                         ),
                       ),
@@ -202,8 +198,8 @@ class _MainScreenState extends State<MainScreen> {
                       builder: (context, state) {
                         return TextView(
                           text: state is StudentGetSuccess
-                              ? "Student (${state.responseModel.data.length})"
-                              : "Student (--)",
+                              ? "${tr("student")} (${state.responseModel.data.length})"
+                              : "${tr("student")} (--)",
                           color: colorPrimary,
                           textSize: 15.sp,
                           textAlign: TextAlign.center,
@@ -228,12 +224,10 @@ class _MainScreenState extends State<MainScreen> {
                             color: colorSecendryLight,
                             borderRadius: BorderRadius.circular(5.r)),
                         child: Center(
-                          child: ImageView(
+                          child: Icon(
+                            Icons.group,
                             size: 50,
-                            margin: EdgeInsets.all(15.w),
-                            url: AppAssets.student,
-                            tintColor: colorPrimary,
-                            imageType: ImageType.asset,
+                            color: colorPrimary,
                           ),
                         ),
                       ),
@@ -244,9 +238,8 @@ class _MainScreenState extends State<MainScreen> {
                       builder: (context, groupsState) {
                         return TextView(
                           text: groupsState is GroupsSuccess
-                              ? "Groups (${groupsState.responseModel.data
-                              .length})"
-                              : "Groups (--)",
+                              ? "${tr("groups")} (${groupsState.responseModel.data.length})"
+                              : "${tr("groups")} (--)",
                           color: colorPrimary,
                           textSize: 15.sp,
                           textAlign: TextAlign.center,
@@ -277,14 +270,11 @@ class _MainScreenState extends State<MainScreen> {
                             color: colorSecendryLight,
                             borderRadius: BorderRadius.circular(5.r)),
                         child: Center(
-                          child: ImageView(
-                            size: 50,
-                            margin: EdgeInsets.all(15.w),
-                            url: AppAssets.student,
-                            tintColor: colorPrimary,
-                            imageType: ImageType.asset,
-                          ),
-                        ),
+                            child: Icon(
+                          Icons.calendar_month,
+                          size: 50,
+                          color: colorPrimary,
+                        )),
                       ),
                     ),
                     spaceVertical(space: 5.h),
@@ -293,9 +283,8 @@ class _MainScreenState extends State<MainScreen> {
                       builder: (context, groupsState) {
                         return TextView(
                           text: groupsState is ClassesGetSuccess
-                              ? "Classes (${groupsState.responseModel.data
-                              .length})"
-                              : "Classes (--)",
+                              ? "${tr("classes")} (${groupsState.responseModel.data.length})"
+                              : "${tr("classes")} (--)",
                           color: colorPrimary,
                           textSize: 15.sp,
                           textAlign: TextAlign.center,
@@ -310,7 +299,9 @@ class _MainScreenState extends State<MainScreen> {
                 Column(
                   children: [
                     TapWidget(
-                      onTap: () {context.pushScreen(nextScreen: SubjectScreen());},
+                      onTap: () {
+                        context.pushScreen(nextScreen: SubjectScreen());
+                      },
                       child: Container(
                         height: 90.h,
                         width: 100.w,
@@ -318,14 +309,11 @@ class _MainScreenState extends State<MainScreen> {
                             color: colorSecendryLight,
                             borderRadius: BorderRadius.circular(5.r)),
                         child: Center(
-                          child: ImageView(
-                            size: 50,
-                            margin: EdgeInsets.all(15.w),
-                            url: AppAssets.student,
-                            tintColor: colorPrimary,
-                            imageType: ImageType.asset,
-                          ),
-                        ),
+                            child: Icon(
+                          Icons.menu_book_sharp,
+                          size: 50,
+                          color: colorPrimary,
+                        )),
                       ),
                     ),
                     spaceVertical(space: 5.h),
@@ -335,9 +323,9 @@ class _MainScreenState extends State<MainScreen> {
                       },
                       builder: (context, state) {
                         return TextView(
-                          text:  state is SubjectGetSuccess
-                              ? "Subject (${state.responseModel.data.length})"
-                              : "Subject (--)",
+                          text: state is SubjectGetSuccess
+                              ? "${tr("subject")} (${state.responseModel.data.length})"
+                              : "${tr("subject")} (--)",
                           color: colorPrimary,
                           textSize: 15.sp,
                           textAlign: TextAlign.center,
@@ -360,19 +348,16 @@ class _MainScreenState extends State<MainScreen> {
                             color: colorSecendryLight,
                             borderRadius: BorderRadius.circular(5.r)),
                         child: Center(
-                          child: ImageView(
-                            size: 50,
-                            margin: EdgeInsets.all(15.w),
-                            url: AppAssets.student,
-                            tintColor: colorPrimary,
-                            imageType: ImageType.asset,
-                          ),
-                        ),
+                            child: Icon(
+                          Icons.family_restroom,
+                          size: 50,
+                          color: colorPrimary,
+                        )),
                       ),
                     ),
                     spaceVertical(space: 5.h),
                     TextView(
-                      text: "Classes (10)",
+                      text: "${tr("parents")} (--)",
                       color: colorPrimary,
                       textSize: 15.sp,
                       textAlign: TextAlign.center,
@@ -387,8 +372,9 @@ class _MainScreenState extends State<MainScreen> {
           ]),
           Padding(
             padding:
-            const EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
+                const EdgeInsets.symmetric(vertical: 40.0, horizontal: 10.0),
             child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 TapWidget(
                   onTap: () {
@@ -399,7 +385,17 @@ class _MainScreenState extends State<MainScreen> {
                     color: colorWhite,
                     size: 25.h,
                   ),
-                )
+                ),
+                TapWidget(
+                  onTap: () {
+                    context.pushScreen(nextScreen: ChooseLanguageScreen(fromWhere:"MainScreen"));
+                  },
+                  child: Icon(
+                    Icons.g_translate,
+                    color: colorWhite,
+                    size: 20.h,
+                  ),
+                ),
               ],
             ),
           )

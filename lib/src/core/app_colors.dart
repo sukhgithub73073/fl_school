@@ -10,6 +10,7 @@ Color get colorCard => Color(0xFFF3F5F7) ;
 Color get colorRed => Color(0xffef0707) ;
 Color get colorGreen => Color(0xff06520a) ;
 Color get colorDivider => Color(0xFFF1F1F5) ;
+Color get colorDrawerBg => Color(0xFFeeecee) ;
 
 
 

@@ -74,7 +74,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 40),
                                   child: TextView(
-                                    text: "No Records found",
+                                    text: "noRecordsFound",
                                     color: colorBlack,
                                     textSize: 12.sp,
                                     textAlign: TextAlign.center,
@@ -127,7 +127,7 @@ class _GroupsScreenState extends State<GroupsScreen> {
                     ),
                     spaceHorizontal(space: 10.w),
                     TextView(
-                      text: "Groups",
+                      text: "groups",
                       color: colorWhite,
                       textSize: 16.sp,
                       textAlign: TextAlign.center,

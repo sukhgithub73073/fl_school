@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_school/src/core/app_colors.dart';
 import 'package:fl_school/src/core/app_text_style.dart';
 import 'package:flutter/material.dart';
@@ -99,8 +100,8 @@ class CustomTextField extends StatelessWidget {
             color: textColor ?? colorBlack,
             fontFamily: fontFamily ?? Family.regular),
         decoration: InputDecoration(
-            labelText: labelText == "" ? null : labelText,
-            hintText: hintText,
+            labelText: labelText == "" ? null : tr(labelText ?? ""),
+            hintText: tr(hintText ?? ""),
             hintStyle: TextStyle(
               color: hintTextColor ?? colorBlack,
               fontWeight: hintFontWeight,

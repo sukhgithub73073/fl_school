@@ -1,3 +1,4 @@
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:fl_school/src/core/app_assets.dart';
 import 'package:fl_school/src/core/app_dialog.dart';
 import 'package:fl_school/src/core/app_image_view.dart';
@@ -5,7 +6,6 @@ import 'package:fl_school/src/core/app_loader.dart';
 import 'package:fl_school/src/core/dialog_widgets/failure_message_dialog.dart';
 import 'package:fl_school/src/core/dialog_widgets/success_message_dialog.dart';
 import 'package:fl_school/src/core/drop_down/drop_list_model.dart';
-import 'package:fl_school/src/core/drop_down/select_drop_list.dart';
 import 'package:fl_school/src/data/blocs/classes_bloc/classes_bloc.dart';
 import 'package:fl_school/src/data/blocs/groups_bloc/groups_bloc.dart';
 import 'package:fl_school/src/data/blocs/role_bloc/role_bloc.dart';
@@ -21,6 +21,7 @@ import 'package:fl_school/src/core/app_text_style.dart';
 import 'package:fl_school/src/core/common_space.dart';
 import 'package:fl_school/src/core/text_view.dart';
 import 'package:fl_school/src/extension/app_extension.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class CreateClassesScreen extends StatefulWidget {
   CreateClassesScreen({super.key});
@@ -31,7 +32,7 @@ class CreateClassesScreen extends StatefulWidget {
 
 class _CreateClassesScreenState extends State<CreateClassesScreen> {
   var nameController = TextEditingController(text: "Middle");
-  OptionItem? selectedGroup;
+  DropListModel? selectedGroup;
 
   @override
   void initState() {
@@ -82,7 +83,7 @@ class _CreateClassesScreenState extends State<CreateClassesScreen> {
                         Row(
                           children: [
                             TextView(
-                              text: "Welcome Message",
+                              text: "welcomeMessage",
                               color: colorWhite,
                               textSize: 15.sp,
                               textAlign: TextAlign.left,
@@ -100,7 +101,7 @@ class _CreateClassesScreenState extends State<CreateClassesScreen> {
                         spaceVertical(space: 10.h),
                         TextView(
                           text:
-                              "The standard Lorem Ipsum passage Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. ",
+                              "welcomeDescription",
                           color: colorWhite,
                           textSize: 13.sp,
                           textAlign: TextAlign.left,
@@ -115,31 +116,31 @@ class _CreateClassesScreenState extends State<CreateClassesScreen> {
                   padding: EdgeInsets.symmetric(horizontal: 15.w),
                   child: Column(
                     children: [
+
                       BlocConsumer<GroupsBloc, GroupsState>(
                         listener: (context, state) {},
                         builder: (context, state) {
                           if (state is GroupsSuccess) {
                             printLog(
                                 "builder >>>>>>>>>>>>>>>>>${state is GroupsSuccess}");
-                            List<OptionItem> list = [];
+                            List<DropListModel> list = [];
                             state.responseModel.data.forEach((element) {
-                              list.add(OptionItem(
+                              list.add(DropListModel(
                                   id: "${element["group_id"]}",
-                                  title: "${element["group_name"]}"));
+                                  name: "${element["group_name"]}"));
                             });
-
-                            return SelectDropList(
-                              list: list,
-                              onSelect: (item) {
-                                printLog("onSelectonSelect>>>>>>>>>>>>>>>>>>>>>>${item.id}") ;
-                                selectedGroup = item;
-                              },
+                            return CustomDropdown<DropListModel>.search(
+                              hintText: tr("selectGroup"),
+                              items: list,
+                              excludeSelected: false,
+                              onChanged: (item) {selectedGroup = item;},
                             );
                           } else {
                             return SizedBox.shrink();
                           }
                         },
                       ),
+
                       spaceVertical(space: 20.h),
                       CustomTextField(
                           controller: nameController,
@@ -147,8 +148,8 @@ class _CreateClassesScreenState extends State<CreateClassesScreen> {
                           keyboardType: TextInputType.text,
                           paddingHorizontal: 20.0,
                           hasViewHight: false,
-                          labelText: "Classes Name",
-                          hintText: "Classes Name Here",
+                          labelText: "classesName",
+                          hintText: "classesNameHere",
                           numberOfLines: 1,
                           hintFontWeight: FontWeight.w400,
                           hintTextColor: colorGray.withOpacity(0.6)),
@@ -169,7 +170,7 @@ class _CreateClassesScreenState extends State<CreateClassesScreen> {
                             appDialog(
                                 context: context,
                                 child: SuccessDailog(
-                                  title: "Successfully",
+                                  title: "successfully",
                                   onTap: () {
                                     context.back();
                                     context.back();
@@ -182,7 +183,7 @@ class _CreateClassesScreenState extends State<CreateClassesScreen> {
                             appDialog(
                                 context: context,
                                 child: ErrorDailog(
-                                  title: "Error",
+                                  title: "error",
                                   onTap: () {
                                     context.back();
                                   },
@@ -210,7 +211,7 @@ class _CreateClassesScreenState extends State<CreateClassesScreen> {
                                 }
                               },
                               buttonBackgroundColor: colorPrimary,
-                              nameText: "Create",
+                              nameText: "create",
                               textSize: 18.sp,
                             ),
                           );
@@ -236,7 +237,7 @@ class _CreateClassesScreenState extends State<CreateClassesScreen> {
                     ),
                     spaceHorizontal(space: 10.w),
                     TextView(
-                      text: "Create Classes",
+                      text: "createClasses",
                       color: colorWhite,
                       textSize: 16.sp,
                       textAlign: TextAlign.center,

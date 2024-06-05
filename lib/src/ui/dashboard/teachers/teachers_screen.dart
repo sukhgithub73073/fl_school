@@ -83,7 +83,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 40),
                                   child: TextView(
-                                    text: "No Records found",
+                                    text: "noRecordsFound",
                                     color: colorBlack,
                                     textSize: 12.sp,
                                     textAlign: TextAlign.center,
@@ -221,7 +221,7 @@ class _TeacherScreenState extends State<TeacherScreen> {
                     ),
                     spaceHorizontal(space: 10.w),
                     TextView(
-                      text: "Teacher",
+                      text: "staff",
                       color: colorWhite,
                       textSize: 16.sp,
                       textAlign: TextAlign.center,

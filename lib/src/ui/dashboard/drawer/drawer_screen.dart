@@ -1,3 +1,4 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_school/src/core/app_assets.dart';
 import 'package:fl_school/src/core/app_colors.dart';
 import 'package:fl_school/src/core/app_tap_widget.dart';
@@ -38,30 +39,84 @@ class _DrawerScreenState extends State<DrawerScreen>
   void setDrawerListArray() {
     drawerList = <DrawerList>[
       DrawerList(
-        index: DrawerIndex.HOME,
-        labelName: 'Home',
-        icon: Icon(Icons.home),
+        labelName: tr("manageStudents"),
+        icon: Icon(Icons.manage_accounts),
       ),
       DrawerList(
-        index: DrawerIndex.FeedBack,
-        labelName: 'FeedBack',
-        icon: Icon(Icons.help),
+        //index: DrawerIndex.FeedBack,
+        labelName: tr('manageStaff'),
+        icon: Icon(Icons.groups),
       ),
       DrawerList(
-        index: DrawerIndex.Invite,
-        labelName: 'Invite Friend',
+        //index: DrawerIndex.Invite,
+        labelName: tr('manageClasses'),
         icon: Icon(Icons.group),
       ),
       DrawerList(
-        index: DrawerIndex.Share,
-        labelName: 'Rate the app',
-        icon: Icon(Icons.share),
+        //index: DrawerIndex.Invite,
+        labelName: tr('manageSubject'),
+        icon: Icon(Icons.menu_book),
       ),
       DrawerList(
-        index: DrawerIndex.About,
-        labelName: 'About Us',
-        icon: Icon(Icons.info),
+        //index: DrawerIndex.Invite,
+        labelName: tr('timeTable'),
+        icon: Icon(Icons.lock_clock),
       ),
+      DrawerList(
+        //index: DrawerIndex.Share,
+        labelName: tr('attendance'),
+        icon: Icon(Icons.fingerprint),
+      ),
+      DrawerList(
+        //index: DrawerIndex.Invite,
+        labelName: tr('work'),
+        icon: Icon(Icons.auto_stories),
+      ),
+      DrawerList(
+        //index: DrawerIndex.Invite,
+        labelName: tr('ledger'),
+        icon: Icon(Icons.wallet),
+      ),
+      DrawerList(
+        //index: DrawerIndex.Invite,
+        labelName: tr('leave'),
+        icon: Icon(Icons.calendar_month),
+      ),
+      DrawerList(
+        //index: DrawerIndex.Invite,
+        labelName: tr('complaints'),
+        icon: Icon(Icons.notification_important),
+      ),
+      DrawerList(
+        //index: DrawerIndex.Invite,
+        labelName: tr('transport'),
+        icon: Icon(Icons.bus_alert),
+      ),
+      DrawerList(
+        //index: DrawerIndex.Invite,
+        labelName: tr('exam'),
+        icon: Icon(Icons.developer_board_sharp),
+      ),
+      DrawerList(
+        //index: DrawerIndex.Invite,
+        labelName: tr('document'),
+        icon: Icon(Icons.document_scanner_sharp),
+      ),
+      DrawerList(
+        //index: DrawerIndex.Invite,
+        labelName: tr('library'),
+        icon: Icon(Icons.my_library_books),
+      ),
+      DrawerList(
+        //index: DrawerIndex.Invite,
+        labelName: tr('hostel'),
+        icon: Icon(Icons.house_outlined),
+      ),
+      DrawerList(
+        //index: DrawerIndex.About,
+        labelName: tr('aboutUs'),
+        icon: Icon(Icons.info),
+      )
     ];
   }
 
@@ -106,6 +161,7 @@ class _DrawerScreenState extends State<DrawerScreen>
                                 width: 120,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
+                                  color: Colors.white,
                                   boxShadow: <BoxShadow>[
                                     BoxShadow(
                                         color: colorGray.withOpacity(0.6),
@@ -116,7 +172,7 @@ class _DrawerScreenState extends State<DrawerScreen>
                                 child: ClipRRect(
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(60.0)),
-                                  child: Image.asset(AppAssets.userPlaceholder),
+                                  child: Image.asset(AppAssets.logo),
                                 ),
                               ),
                             ),
@@ -130,7 +186,7 @@ class _DrawerScreenState extends State<DrawerScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              'Chris Hemsworth',
+                              'GSS School (Boys)',
                               style: TextStyle(
                                 fontWeight: FontWeight.w600,
                                 color: isLightMode ? colorGray : colorWhite,
@@ -168,17 +224,13 @@ class _DrawerScreenState extends State<DrawerScreen>
           const SizedBox(
             height: 4,
           ),
-          Divider(
-            height: 1,
-            color: colorGray.withOpacity(0.6),
-          ),
           Expanded(
             child: ListView.builder(
               physics: const BouncingScrollPhysics(),
               padding: const EdgeInsets.all(0.0),
               itemCount: drawerList?.length,
               itemBuilder: (BuildContext context, int index) {
-                return inkwell(drawerList![index]);
+                return inkwell(drawerList![index], index);
               },
             ),
           ),
@@ -189,14 +241,15 @@ class _DrawerScreenState extends State<DrawerScreen>
           Column(
             children: <Widget>[
               ListTile(
-                title: Text(
-                  'Sign Out',
-                  style: TextStyle(
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                    color: colorPrimary,
-                  ),
+                title: TextView(
+                  text: "signOut",
+                  color: colorPrimary,
+                  // Set text color to black
+                  textSize: 16.sp,
                   textAlign: TextAlign.left,
+                  style: AppTextStyleEnum.title,
+                  fontFamily: Family.medium,
+                  lineHeight: 1.3,
                 ),
                 trailing: Icon(
                   Icons.power_settings_new,
@@ -220,14 +273,14 @@ class _DrawerScreenState extends State<DrawerScreen>
     print('Doing Something...'); // Print to console.
   }
 
-  Widget inkwell(DrawerList listData) {
+  Widget inkwell(DrawerList listData, int index) {
     return Material(
       color: Colors.transparent,
       child: InkWell(
         splashColor: Colors.grey.withOpacity(0.1),
         highlightColor: Colors.transparent,
         onTap: () {
-          navigationtoScreen(listData.index!);
+          navigationtoScreen();
         },
         child: Stack(
           children: <Widget>[
@@ -258,14 +311,9 @@ class _DrawerScreenState extends State<DrawerScreen>
                           width: 24,
                           height: 24,
                           child: Image.asset(listData.imageName,
-                              color: widget.screenIndex == listData.index
-                                  ? Colors.blue
-                                  : colorBlack),
+                              color: colorBlack),
                         )
-                      : Icon(listData.icon?.icon,
-                          color: widget.screenIndex == listData.index
-                              ? Colors.blue
-                              : colorBlack),
+                      : Icon(listData.icon?.icon, color: colorBlack),
                   const Padding(
                     padding: EdgeInsets.all(4.0),
                   ),
@@ -274,16 +322,14 @@ class _DrawerScreenState extends State<DrawerScreen>
                     style: TextStyle(
                       fontWeight: FontWeight.w500,
                       fontSize: 16,
-                      color: widget.screenIndex == listData.index
-                          ? Colors.black
-                          : colorBlack,
+                      color: colorBlack,
                     ),
                     textAlign: TextAlign.left,
                   ),
                 ],
               ),
             ),
-            widget.screenIndex == listData.index
+            widget.screenIndex == index
                 ? AnimatedBuilder(
                     animation: iconAnimationController!,
                     builder: (BuildContext context, Widget? child) {
@@ -320,17 +366,7 @@ class _DrawerScreenState extends State<DrawerScreen>
     );
   }
 
-  Future<void> navigationtoScreen(DrawerIndex indexScreen) async {}
-}
-
-enum DrawerIndex {
-  HOME,
-  FeedBack,
-  Help,
-  Share,
-  About,
-  Invite,
-  Testing,
+  Future<void> navigationtoScreen() async {}
 }
 
 class DrawerList {
@@ -338,7 +374,6 @@ class DrawerList {
     this.isAssetsImage = false,
     this.labelName = '',
     this.icon,
-    this.index,
     this.imageName = '',
   });
 
@@ -346,5 +381,4 @@ class DrawerList {
   Icon? icon;
   bool isAssetsImage;
   String imageName;
-  DrawerIndex? index;
 }

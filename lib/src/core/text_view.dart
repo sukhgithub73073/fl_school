@@ -1,9 +1,9 @@
+import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_school/src/core/app_colors.dart';
 import 'package:fl_school/src/core/app_text_style.dart';
 import 'package:flutter/material.dart';
 
-
-enum AppTextStyleEnum {bold ,medium,small,    title,  regular }
+enum AppTextStyleEnum { bold, medium, small, title, regular }
 
 class TextView extends StatelessWidget {
   final String text;
@@ -22,52 +22,43 @@ class TextView extends StatelessWidget {
   final double? lineHeight;
   final FontStyle? fontStyle;
   final double? letterSpacing;
-  final TextOverflow ?overflow;
+  final TextOverflow? overflow;
 
   const TextView(
-      {super.key, required this.text,
-        this.color,
-
-        this.style,
-        this.maxlines,
-        this.textAlign,
-        this.underline,
-        this.textSize,
-        this.fontFamily,
-        this.fontWeight,
-        this.lineHeight,
-        this.fontStyle,
-        this.underlineColor,
-        this.strikeThrough,
-        this.capitalise,
-        this.letterSpacing,
-        this.overflow});
+      {super.key,
+      required this.text,
+      this.color,
+      this.style,
+      this.maxlines,
+      this.textAlign,
+      this.underline,
+      this.textSize,
+      this.fontFamily,
+      this.fontWeight,
+      this.lineHeight,
+      this.fontStyle,
+      this.underlineColor,
+      this.strikeThrough,
+      this.capitalise,
+      this.letterSpacing,
+      this.overflow});
 
   @override
   Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
-
     return Text(
-
-      capitalise != null && capitalise! ? text.toUpperCase() : text,
+      tr(text),
       maxLines: maxlines,
       overflow: maxlines != null ? TextOverflow.ellipsis : null,
       textAlign: textAlign,
-
-
-
-      style: getStyle(
-          color ?? colorBlack,
-
-          textSize ?? getTextSize(width)),
+      style: getStyle(color ?? colorBlack, textSize ?? getTextSize(width)),
     );
   }
 
   TextStyle getStyle(
-      Color color,
-
-      double textSize,
-      ) {
+    Color color,
+    double textSize,
+  ) {
     return TextStyle(
         overflow: overflow,
         color: color,
@@ -78,12 +69,12 @@ class TextView extends StatelessWidget {
         height: lineHeight ?? 1.0,
         fontFamily: fontFamily ?? Family.regular,
         decorationColor: underlineColor ?? colorBlack,
-        decorationThickness:1,
+        decorationThickness: 1,
         decoration: strikeThrough != null && strikeThrough!
             ? TextDecoration.lineThrough
             : underline != null
-            ? TextDecoration.underline
-            : null);
+                ? TextDecoration.underline
+                : null);
   }
 
   getTextSize(double width) {

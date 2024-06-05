@@ -34,12 +34,11 @@ class SchoolRegisterScreen extends StatefulWidget {
 }
 
 class _SchoolRegisterScreenState extends State<SchoolRegisterScreen> {
-  var nameController =
-      TextEditingController(text: "Government Senior Secondary School (Boys)");
-  var emailController = TextEditingController(text: "gssspgk@gmail.com");
+  var nameController = TextEditingController(text: "");
+  var emailController = TextEditingController(text: "");
   var pincodeController = TextEditingController(text: "");
   var addressController = TextEditingController(text: "");
-  var passwordController = TextEditingController(text: "Qwerty@123");
+  var passwordController = TextEditingController(text: "");
   var selectedPostOffice;
 
   @override

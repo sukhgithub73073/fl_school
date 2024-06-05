@@ -3,5 +3,6 @@ class AppStrings{
   static String secureLogin ="Secure Login" ;
   static String schoolVerification ="School Verification" ;
   static String code ="Code" ;
+  static String chooseLangugae ="Choose Langugae" ;
 
 }

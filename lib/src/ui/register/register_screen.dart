@@ -1,20 +1,24 @@
+import 'dart:io';
+
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:fl_school/src/core/app_assets.dart';
 import 'package:fl_school/src/core/app_dialog.dart';
-import 'package:fl_school/src/core/app_strings.dart';
 import 'package:fl_school/src/core/dialog_widgets/failure_message_dialog.dart';
 import 'package:fl_school/src/core/dialog_widgets/success_message_dialog.dart';
 import 'package:fl_school/src/core/drop_down/drop_list_model.dart';
-import 'package:fl_school/src/core/drop_down/select_drop_list.dart';
 import 'package:fl_school/src/data/blocs/classes_bloc/classes_bloc.dart';
 import 'package:fl_school/src/data/blocs/groups_bloc/groups_bloc.dart';
+import 'package:fl_school/src/data/blocs/image_pick_bloc/image_pick_bloc.dart';
 import 'package:fl_school/src/data/blocs/pincode_bloc/pincode_bloc.dart';
 import 'package:fl_school/src/data/blocs/register_bloc/register_bloc.dart';
 import 'package:fl_school/src/data/models/pincode_model.dart';
-import 'package:fl_school/src/ui/dashboard/main_screen.dart';
+import 'package:fl_school/src/ui/register/parent_detail_screen.dart';
 import 'package:fl_school/src/utility/app_util.dart';
+import 'package:fl_school/src/utility/decoration_util.dart';
 import 'package:fl_school/src/utility/validation_util.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:fl_school/src/core/app_button.dart';
@@ -24,11 +28,11 @@ import 'package:fl_school/src/core/app_input_field.dart';
 import 'package:fl_school/src/core/app_tap_widget.dart';
 import 'package:fl_school/src/core/app_text_style.dart';
 import 'package:fl_school/src/core/common_space.dart';
-import 'dart:math';
+import 'package:easy_localization/easy_localization.dart';
 
-import 'package:fl_school/src/core/custom_clipper.dart';
 import 'package:fl_school/src/core/text_view.dart';
 import 'package:fl_school/src/extension/app_extension.dart';
+import 'package:radio_group_v2/radio_group_v2.dart';
 
 class RegisterScreen extends StatefulWidget {
   RegisterScreen({super.key});
@@ -38,25 +42,31 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
-  var nameController = TextEditingController(text: "Sukhmander Singh");
-  var fatherController = TextEditingController(text: "Kartar Singh");
-  var motherController = TextEditingController(text: "Geboo Kaur");
-  var emailController = TextEditingController(text: "sukhmander@gmail.com");
+  var nameController = TextEditingController(text: "");
+  var aadhaarController = TextEditingController(text: "");
+  var fatherController = TextEditingController(text: "");
+  var motherController = TextEditingController(text: "");
+  var srnoController = TextEditingController(text: "");
+  var emailController = TextEditingController(text: "");
   var pincodeController = TextEditingController(text: "");
   var addressController = TextEditingController(text: "");
-  var passwordController = TextEditingController(text: "Qwerty@123");
+  var passwordController = TextEditingController(text: "");
   var selectedPostOffice;
-  var selectedGroup ;
-  var selectedClass ;
+  var selectedGroup;
+  var selectedClass;
+  var admissionType = "new";
+  RadioGroupController myController = RadioGroupController();
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
     return Scaffold(
       body: ListView(
         children: [
           Stack(
             children: [
               ImageView(
+                  imageType: ImageType.asset,
                   url: AppAssets.topRound,
                   width: double.maxFinite,
                   height: 150.h,
@@ -74,10 +84,49 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           color: colorWhite,
                           shape: BoxShape.circle),
                       child: Center(
-                        child: ImageView(
-                          margin: EdgeInsets.all(20.w),
-                          url: AppAssets.logo,
-                          imageType: ImageType.asset,
+                        child: Stack(
+                          children: [
+                            BlocConsumer<ImagePickBloc, ImagePickState>(
+                              listener: (context, state) {},
+                              builder: (context, state) {
+                                if (state is ImagePickRemoveBg) {
+                                  return Image.memory(state.file);
+                                } else {
+                                  if (state is ImagePickSuccess) {
+                                    return CircleAvatar(
+                                      radius: 100,
+                                      backgroundImage:
+                                          FileImage(File(state.file.path)),
+                                    );
+                                  } else {
+                                    return CircleAvatar(
+                                      radius: 100,
+                                      backgroundImage:
+                                          AssetImage(AppAssets.logo),
+                                    );
+                                  }
+                                }
+                              },
+                            ),
+                            Positioned(
+                                bottom: 0,
+                                right: 10,
+                                child: TapWidget(
+                                  onTap: () {
+                                    context
+                                        .read<ImagePickBloc>()
+                                        .add(ChangeImagePickEvent());
+                                  },
+                                  child: Container(
+                                      padding: EdgeInsets.all(8),
+                                      decoration: BoxDecoration(
+                                          border: Border.all(
+                                              color: colorBlack, width: 1.w),
+                                          color: colorWhite,
+                                          shape: BoxShape.circle),
+                                      child: Icon(Icons.camera_alt)),
+                                ))
+                          ],
                         ),
                       ),
                     ),
@@ -86,30 +135,114 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       padding: EdgeInsets.symmetric(horizontal: 15.w),
                       child: Column(
                         children: [
-
+                          spaceVertical(space: 20.h),
+                          Container(
+                            height: 40.h,
+                            width: double.maxFinite,
+                            decoration: BoxDecoration(
+                                border: Border.all(color: Colors.grey),
+                                boxShadow: [
+                                  BoxShadow(
+                                      color: colorPrimary.withOpacity(0.8),
+                                      blurRadius: 10,
+                                      blurStyle: BlurStyle.outer)
+                                ],
+                                borderRadius: BorderRadius.circular(10)),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                Expanded(
+                                  child: TapWidget(
+                                    onTap: () {
+                                      setState(() {
+                                        admissionType = "new";
+                                      });
+                                    },
+                                    child: Container(
+                                      height: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                          color: admissionType == "new"
+                                              ? colorPrimary
+                                              : colorWhite,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                        child: TextView(
+                                          text: "newAddmission",
+                                          color: admissionType == "new"
+                                              ? colorWhite
+                                              : colorGray,
+                                          textSize: 16.sp,
+                                          textAlign: TextAlign.center,
+                                          style: AppTextStyleEnum.medium,
+                                          fontFamily: Family.medium,
+                                          lineHeight: 1.3,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: TapWidget(
+                                    onTap: () {
+                                      setState(() {
+                                        admissionType = "old";
+                                      });
+                                    },
+                                    child: Container(
+                                      height: double.maxFinite,
+                                      decoration: BoxDecoration(
+                                          color: admissionType == "old"
+                                              ? colorPrimary
+                                              : colorWhite,
+                                          borderRadius:
+                                              BorderRadius.circular(10)),
+                                      child: Center(
+                                        child: TextView(
+                                          text: "oldAddmission",
+                                          color: admissionType == "old"
+                                              ? colorWhite
+                                              : colorGray,
+                                          textSize: 16.sp,
+                                          textAlign: TextAlign.center,
+                                          style: AppTextStyleEnum.medium,
+                                          fontFamily: Family.medium,
+                                          lineHeight: 1.3,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          spaceVertical(space: 20.h),
                           BlocConsumer<GroupsBloc, GroupsState>(
                             listener: (context, state) {},
                             builder: (context, state) {
                               if (state is GroupsSuccess) {
                                 printLog(
                                     "builder >>>>>>>>>>>>>>>>>${state is GroupsSuccess}");
-                                List<OptionItem> list = [];
+                                List<DropListModel> list = [];
                                 state.responseModel.data.forEach((element) {
-                                  list.add(OptionItem(
+                                  list.add(DropListModel(
                                       id: "${element["group_id"]}",
-                                      title: "${element["group_name"]}"));
+                                      name: "${element["group_name"]}"));
                                 });
-
-                                return SelectDropList(
-                                  list: list,
-                                  onSelect: (item) {
-                                    selectedGroup = item ;
+                                return CustomDropdown<DropListModel>.search(
+                                  hintText: tr("selectGroup"),
+                                  items: list,
+                                  excludeSelected: false,
+                                  decoration: customDropdownDecoration,
+                                  onChanged: (item) {
+                                    selectedGroup = item;
                                     context
                                         .read<ClassesBloc>()
                                         .add(GetClassesByGroupEvent(map: {
-                                      "school_code": "GSSS19543",
-                                      "group_id": item.id ?? "",
-                                    }));
+                                          "school_code": "GSSS19543",
+                                          "group_id": item.id ?? "",
+                                        }));
                                   },
                                 );
                               } else {
@@ -118,22 +251,25 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             },
                           ),
                           spaceVertical(space: 10.h),
-
                           BlocConsumer<ClassesBloc, ClassesState>(
                             listener: (context, state) {},
                             builder: (context, state) {
                               if (state is ClassesGetSuccess) {
-                                List<OptionItem> list = [];
+                                printLog(
+                                    "builder >>>>>>>>>>>>>>>>>${state is GroupsSuccess}");
+                                List<DropListModel> list = [];
                                 state.responseModel.data.forEach((element) {
-                                  list.add(OptionItem(
+                                  list.add(DropListModel(
                                       id: "${element["class_id"]}",
-                                      title: "${element["class_name"]}"));
+                                      name: "${element["class_name"]}"));
                                 });
-
-                                return SelectDropList(
-                                  list: list,
-                                  onSelect: (item) {
-                                    selectedClass = item ;
+                                return CustomDropdown<DropListModel>.search(
+                                  hintText: tr("selectClass"),
+                                  items: list,
+                                  decoration: customDropdownDecoration,
+                                  excludeSelected: false,
+                                  onChanged: (item) {
+                                    selectedClass = item;
                                   },
                                 );
                               } else {
@@ -141,17 +277,29 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               }
                             },
                           ),
-
                           spaceVertical(space: 20.h),
-
+                          if (admissionType == "old") ...[
+                            CustomTextField(
+                                controller: srnoController,
+                                textInputAction: TextInputAction.next,
+                                keyboardType: TextInputType.text,
+                                paddingHorizontal: 20.0,
+                                hasViewHight: false,
+                                labelText: "srNo",
+                                hintText: "srNoHere",
+                                numberOfLines: 1,
+                                hintFontWeight: FontWeight.w400,
+                                hintTextColor: colorGray.withOpacity(0.6)),
+                            spaceVertical(space: 20.h),
+                          ],
                           CustomTextField(
                               controller: emailController,
                               textInputAction: TextInputAction.next,
                               keyboardType: TextInputType.text,
                               paddingHorizontal: 20.0,
                               hasViewHight: false,
-                              labelText: "Email",
-                              hintText: "Email Here",
+                              labelText: "email",
+                              hintText: "emailHere",
                               numberOfLines: 1,
                               hintFontWeight: FontWeight.w400,
                               hintTextColor: colorGray.withOpacity(0.6)),
@@ -162,7 +310,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               keyboardType: TextInputType.text,
                               paddingHorizontal: 20.0,
                               hasViewHight: false,
-                              labelText: "Password",
+                              labelText: "password",
                               hintText: "***********",
                               numberOfLines: 1,
                               borderColor: colorInputBorder,
@@ -175,35 +323,133 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               keyboardType: TextInputType.text,
                               paddingHorizontal: 20.0,
                               hasViewHight: false,
-                              labelText: "Name",
-                              hintText: "Name Here",
+                              labelText: "name",
+                              hintText: "nameHere",
                               numberOfLines: 1,
                               hintFontWeight: FontWeight.w400,
                               hintTextColor: colorGray.withOpacity(0.6)),
                           spaceVertical(space: 20.h),
                           CustomTextField(
-                              controller: fatherController,
+                              controller: aadhaarController,
+                              inputFormatters: [
+                                FilteringTextInputFormatter.digitsOnly,
+                                LengthLimitingTextInputFormatter(12),
+                              ],
                               textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.text,
+                              keyboardType: TextInputType.number,
                               paddingHorizontal: 20.0,
                               hasViewHight: false,
-                              labelText: "Father Name",
-                              hintText: "Father Name Here",
+                              labelText: "aadhaarNumber",
+                              hintText: "aadhaarNumberHere",
                               numberOfLines: 1,
                               hintFontWeight: FontWeight.w400,
                               hintTextColor: colorGray.withOpacity(0.6)),
                           spaceVertical(space: 20.h),
-                          CustomTextField(
-                              controller: motherController,
-                              textInputAction: TextInputAction.next,
-                              keyboardType: TextInputType.text,
-                              paddingHorizontal: 20.0,
-                              hasViewHight: false,
-                              labelText: "Mother Name",
-                              hintText: "Mother Name Here",
-                              numberOfLines: 1,
-                              hintFontWeight: FontWeight.w400,
-                              hintTextColor: colorGray.withOpacity(0.6)),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: RadioGroup(
+                              controller: myController,
+                              values: ["Male", "Female", "Other"],
+                              indexOfDefault: 0,
+                              orientation: RadioGroupOrientation.horizontal,
+                              decoration: RadioGroupDecoration(
+                                spacing: 10.0,
+                                labelStyle: TextStyle(
+                                  color: colorBlack,
+                                ),
+                                activeColor: colorPrimary,
+                              ),
+                            ),
+                          ),
+                          spaceVertical(space: 20.h),
+                          CustomDropdown<DropListModel>.search(
+                            hintText: tr("selectReligion"),
+                            items: getReligionList(),
+                            decoration: customDropdownDecoration,
+                            excludeSelected: false,
+                            onChanged: (item) {},
+                          ),
+                          spaceVertical(space: 20.h),
+                          Row(children: [
+                            Expanded(
+                              child: CustomDropdown<DropListModel>.search(
+                                hintText: tr("selectCaste"),
+                                items: getCasteList(),
+                                decoration: customDropdownDecoration,
+                                excludeSelected: false,
+                                onChanged: (item) {},
+                              ),
+                            ),
+                            spaceHorizontal(space: 10.w),
+                            Expanded(
+                              child: CustomDropdown<DropListModel>.search(
+                                hintText: tr("selectSubCaste"),
+                                items: getSubCasteList(),
+                                decoration: customDropdownDecoration,
+                                excludeSelected: false,
+                                onChanged: (item) {},
+                              ),
+                            ),
+                          ],) ,
+
+                          spaceVertical(space: 20.h),
+
+
+                          Row(
+                            children: [
+                              Expanded(
+                                child: TapWidget(
+                                  onTap: () {
+                                    context.pushScreen(
+                                        nextScreen:
+                                            ParentDetailScreen(type: "father"));
+                                  },
+                                  child: CustomTextField(
+                                      controller: fatherController,
+                                      textInputAction: TextInputAction.next,
+                                      keyboardType: TextInputType.text,
+                                      paddingHorizontal: 20.0,
+                                      hasViewHight: false,
+                                      readOnly: true,
+                                      enabled: false,
+                                      onChanged: null,
+                                      onTab: null,
+                                      labelText: "fatherDetail",
+                                      hintText: "fatherNameHere",
+                                      numberOfLines: 1,
+                                      hintFontWeight: FontWeight.w400,
+                                      hintTextColor:
+                                          colorGray.withOpacity(0.6)),
+                                ),
+                              ),
+                              spaceHorizontal(space: 10.w),
+                              Expanded(
+                                child: TapWidget(
+                                  onTap: () {
+                                    context.pushScreen(
+                                        nextScreen:
+                                            ParentDetailScreen(type: "mother"));
+                                  },
+                                  child: CustomTextField(
+                                      controller: motherController,
+                                      textInputAction: TextInputAction.next,
+                                      keyboardType: TextInputType.text,
+                                      paddingHorizontal: 20.0,
+                                      hasViewHight: false,
+                                      readOnly: true,
+                                      enabled: false,
+                                      onChanged: null,
+                                      onTab: null,
+                                      labelText: "motherDetail",
+                                      hintText: "motherNameHere",
+                                      numberOfLines: 1,
+                                      hintFontWeight: FontWeight.w400,
+                                      hintTextColor:
+                                          colorGray.withOpacity(0.6)),
+                                ),
+                              ),
+                            ],
+                          ),
                           spaceVertical(space: 20.h),
                           BlocConsumer<PincodeBloc, PincodeState>(
                             listener: (context, state) {
@@ -211,7 +457,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 appDialog(
                                     context: context,
                                     child: ErrorDailog(
-                                      title: "Invalid Pincode",
+                                      title: "invalidPincode",
                                       onTap: () {
                                         context.back();
                                       },
@@ -228,8 +474,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                       keyboardType: TextInputType.number,
                                       paddingHorizontal: 20.0,
                                       hasViewHight: false,
-                                      labelText: "Pincode",
-                                      hintText: "Pincode Here",
+                                      labelText: "pincode",
+                                      hintText: "pincodeHere",
                                       numberOfLines: 1,
                                       hintFontWeight: FontWeight.w400,
                                       onChanged: (e) {
@@ -289,7 +535,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                                 color: Colors.grey,
                                               ),
                                               hint: Text(
-                                                "Select City",
+                                                "selectCity",
                                                 style: TextStyle(
                                                   color: Colors.grey,
                                                   fontSize: 16,
@@ -349,8 +595,21 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               keyboardType: TextInputType.text,
                               paddingHorizontal: 20.0,
                               hasViewHight: false,
-                              labelText: "Address",
-                              hintText: "Address Here",
+                              labelText: "address",
+                              hintText: "addressHere",
+                              numberOfLines: 1,
+                              hintFontWeight: FontWeight.w400,
+                              hintTextColor: colorGray.withOpacity(0.6)),
+
+                          spaceVertical(space: 20.h),
+                          CustomTextField(
+                              controller: addressController,
+                              textInputAction: TextInputAction.next,
+                              keyboardType: TextInputType.text,
+                              paddingHorizontal: 20.0,
+                              hasViewHight: false,
+                              labelText: "previousSchool",
+                              hintText: "previousSchoolHere",
                               numberOfLines: 1,
                               hintFontWeight: FontWeight.w400,
                               hintTextColor: colorGray.withOpacity(0.6)),
@@ -361,19 +620,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                 appDialog(
                                     context: context,
                                     child: SuccessDailog(
-                                      title: "Successfully",
+                                      title: "successfully",
                                       onTap: () {
                                         context.back();
                                         context.back();
                                       },
                                       message: "${state.userModel.message}",
                                     ));
-                              }
-                              else if (state is RegisterError) {
+                              } else if (state is RegisterError) {
                                 appDialog(
                                     context: context,
                                     child: ErrorDailog(
-                                      title: "Error",
+                                      title: "error",
                                       onTap: () {
                                         context.back();
                                       },
@@ -414,29 +672,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
                                     }
                                   },
                                   buttonBackgroundColor: colorPrimary,
-                                  nameText: "Register",
+                                  nameText: "register",
                                   textSize: 18.sp,
                                 ),
                               );
                             },
                           ),
                           spaceVertical(space: 10.h),
-                          TapWidget(
-                            onTap: () {},
-                            child: TextView(
-                              text: "Have an account ? Login",
-                              color: colorGray,
-                              textSize: 12.sp,
-                              textAlign: TextAlign.center,
-                              style: AppTextStyleEnum.medium,
-                              fontFamily: Family.medium,
-                              lineHeight: 1.3,
-                            ),
-                          )
                         ],
                       ),
-                    )
+                    ),
+                    spaceVertical(space: 10.h),
                   ]),
+              Positioned(
+                top: 5.h,
+                left: 5.w,
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: Icon(color: colorWhite, Icons.arrow_back),
+                      onPressed: () {
+                        context.back();
+                      },
+                    ),
+                    TextView(
+                      text: "studentsRegistrationForm",
+                      color: colorWhite,
+                      textSize: 16.sp,
+                      textAlign: TextAlign.center,
+                      style: AppTextStyleEnum.medium,
+                      fontFamily: Family.medium,
+                      lineHeight: 1.3,
+                    )
+                  ],
+                ),
+              ),
             ],
           ),
         ],

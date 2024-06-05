@@ -1,14 +1,11 @@
+import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:fl_school/src/core/app_assets.dart';
 import 'package:fl_school/src/core/app_colors.dart';
-import 'package:fl_school/src/core/app_dialog.dart';
 import 'package:fl_school/src/core/app_image_view.dart';
-import 'package:fl_school/src/core/app_loader.dart';
 import 'package:fl_school/src/core/app_tap_widget.dart';
 import 'package:fl_school/src/core/app_text_style.dart';
 import 'package:fl_school/src/core/common_space.dart';
-import 'package:fl_school/src/core/dialog_widgets/failure_message_dialog.dart';
 import 'package:fl_school/src/core/drop_down/drop_list_model.dart';
-import 'package:fl_school/src/core/drop_down/select_drop_list.dart';
 import 'package:fl_school/src/core/text_view.dart';
 import 'package:fl_school/src/data/blocs/classes_bloc/classes_bloc.dart';
 import 'package:fl_school/src/data/blocs/groups_bloc/groups_bloc.dart';
@@ -18,6 +15,7 @@ import 'package:fl_school/src/utility/app_util.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:easy_localization/easy_localization.dart';
 
 class ClassesScreen extends StatefulWidget {
   const ClassesScreen({super.key});
@@ -61,37 +59,40 @@ class _ClassesScreenState extends State<ClassesScreen> {
                       ),
                     ),
                     spaceVertical(space: 20.h),
+
                     BlocConsumer<GroupsBloc, GroupsState>(
                       listener: (context, state) {},
                       builder: (context, state) {
                         if (state is GroupsSuccess) {
                           printLog(
                               "builder >>>>>>>>>>>>>>>>>${state is GroupsSuccess}");
-                          List<OptionItem> list = [];
+                          List<DropListModel> list = [];
                           state.responseModel.data.forEach((element) {
-                            list.add(OptionItem(
+                            list.add(DropListModel(
                                 id: "${element["group_id"]}",
-                                title: "${element["group_name"]}"));
+                                name: "${element["group_name"]}"));
                           });
-
-                          return SelectDropList(
-                            list: list,
-                            onSelect: (item) {
+                          return CustomDropdown<DropListModel>.search(
+                            hintText: tr("selectGroup"),
+                            items: list,
+                            excludeSelected: false,
+                            onChanged: (item) {
                               printLog(
-                                  "onSelectonSelect>>>>>>>>>>>>>>>>>>>>>>${item.id}");
+                                  "onSelectonSelect>>>>>>>>>>>>>>>>>>>>>>${item?.id}");
                               context
                                   .read<ClassesBloc>()
                                   .add(GetClassesByGroupEvent(map: {
-                                    "school_code": "GSSS19543",
-                                    "group_id": item.id ?? "",
-                                  }));
-                            },
+                                "school_code": "GSSS19543",
+                                "group_id": item?.id ?? "",
+                              }));
+                              },
                           );
                         } else {
                           return SizedBox.shrink();
                         }
                       },
                     ),
+
                     BlocConsumer<ClassesBloc, ClassesState>(
                       listener: (context, state) {
                         if (state is ClassesGetLoading) {
@@ -109,7 +110,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                                   padding:
                                       const EdgeInsets.symmetric(vertical: 40),
                                   child: TextView(
-                                    text: "No Records found",
+                                    text: "noRecordsFound",
                                     color: colorBlack,
                                     textSize: 12.sp,
                                     textAlign: TextAlign.center,
@@ -129,15 +130,41 @@ class _ClassesScreenState extends State<ClassesScreen> {
                                       shadowColor: colorPrimary,
                                       child: Padding(
                                         padding: const EdgeInsets.all(20.0),
-                                        child: TextView(
-                                          text:
-                                              "${state.responseModel.data[i]["class_name"]}",
-                                          color: colorPrimary,
-                                          textSize: 15.sp,
-                                          textAlign: TextAlign.start,
-                                          style: AppTextStyleEnum.medium,
-                                          fontFamily: Family.medium,
-                                          lineHeight: 1.3,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            TextView(
+                                              text:
+                                                  "${state.responseModel.data[i]["class_name"]}",
+                                              color: colorPrimary,
+                                              textSize: 15.sp,
+                                              textAlign: TextAlign.start,
+                                              style: AppTextStyleEnum.medium,
+                                              fontFamily: Family.medium,
+                                              lineHeight: 1.3,
+                                            ),
+                                            spaceVertical(space: 5.h),
+                                            TextView(
+                                              text: "No of Student : 200",
+                                              color: colorBlack,
+                                              textSize: 11.sp,
+                                              textAlign: TextAlign.start,
+                                              style: AppTextStyleEnum.medium,
+                                              fontFamily: Family.medium,
+                                              lineHeight: 1.3,
+                                            ),
+                                            spaceVertical(space: 5.h),
+                                            TextView(
+                                              text: "No of Subjects : 20",
+                                              color: colorBlack,
+                                              textSize: 11.sp,
+                                              textAlign: TextAlign.start,
+                                              style: AppTextStyleEnum.medium,
+                                              fontFamily: Family.medium,
+                                              lineHeight: 1.3,
+                                            ),
+                                          ],
                                         ),
                                       ),
                                     );
@@ -162,7 +189,7 @@ class _ClassesScreenState extends State<ClassesScreen> {
                     ),
                     spaceHorizontal(space: 10.w),
                     TextView(
-                      text: "Classes",
+                      text: "classes",
                       color: colorWhite,
                       textSize: 16.sp,
                       textAlign: TextAlign.center,

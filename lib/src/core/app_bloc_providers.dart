@@ -1,6 +1,8 @@
 import 'package:fl_school/src/data/blocs/classes_bloc/classes_bloc.dart';
 import 'package:fl_school/src/data/blocs/detail_bloc/detail_bloc.dart';
 import 'package:fl_school/src/data/blocs/groups_bloc/groups_bloc.dart';
+import 'package:fl_school/src/data/blocs/image_pick_bloc/image_pick_bloc.dart';
+import 'package:fl_school/src/data/blocs/language_bloc/language_bloc.dart';
 import 'package:fl_school/src/data/blocs/pincode_bloc/pincode_bloc.dart';
 import 'package:fl_school/src/data/blocs/role_bloc/role_bloc.dart';
 import 'package:fl_school/src/data/blocs/student_bloc/student_bloc.dart';
@@ -14,6 +16,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:fl_school/src/data/blocs/login_bloc/login_bloc.dart';
 import 'package:fl_school/src/data/blocs/product_bloc/product_bloc.dart';
 import 'package:fl_school/src/data/blocs/register_bloc/register_bloc.dart';
+import 'package:hive_storage/hive_storage.dart';
 
 class AppBlocProvider extends StatelessWidget {
   final Widget child;
@@ -27,6 +30,7 @@ class AppBlocProvider extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     ScreenUtil.init(context);
     return MultiBlocProvider(
       providers: [
@@ -42,6 +46,8 @@ class AppBlocProvider extends StatelessWidget {
         BlocProvider(lazy: lazy, create: (_) => TeacherBloc()),
         BlocProvider(lazy: lazy, create: (_) => StudentBloc()),
         BlocProvider(lazy: lazy, create: (_) => SubjectBloc()),
+        BlocProvider(lazy: lazy, create: (_) => ImagePickBloc()),
+        BlocProvider(lazy: lazy, create: (_) => LanguageBloc()..add(ChangeLanguageEvent(locale: "en"))) ,
 
 
         BlocProvider(

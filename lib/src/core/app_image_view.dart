@@ -4,7 +4,6 @@ import 'package:fl_school/src/core/app_colors.dart';
 import 'package:fl_school/src/core/app_tap_widget.dart';
 import 'package:flutter/material.dart';
 
-
 enum ImageType { asset, file, network }
 
 class ImageView extends StatelessWidget {
@@ -21,19 +20,28 @@ class ImageView extends StatelessWidget {
   final Function()? onTap;
   final bool hasBorder;
 
-  const ImageView(
-      {super.key,
-      required this.url,
-      this.imageType,
-      this.size,
-      this.height,
-      this.width,
-      this.fit, this.onTap, this.radius, this.tintColor, this.margin, this.hasBorder = false, this.borderColor, });
+  const ImageView({
+    super.key,
+    required this.url,
+    this.imageType,
+    this.size,
+    this.height,
+    this.width,
+    this.fit,
+    this.onTap,
+    this.radius,
+    this.tintColor,
+    this.margin,
+    this.hasBorder = false,
+    this.borderColor,
+  });
 
   ImageProvider image() {
     switch (imageType) {
       case ImageType.network:
-        return NetworkImage(url==""?"https://pinnacle.works/wp-content/uploads/2022/06/dummy-image.jpg":url);
+        return NetworkImage(url == ""
+            ? "https://pinnacle.works/wp-content/uploads/2022/06/dummy-image.jpg"
+            : url);
       case ImageType.file:
         return FileImage(File(url));
       default:
@@ -50,26 +58,31 @@ class ImageView extends StatelessWidget {
           Container(
             height: size ?? height,
             width: size ?? width,
-            decoration: hasBorder ? BoxDecoration(
-                  borderRadius: BorderRadius.circular(radius ?? 0),
-                  border: Border.all(color: borderColor! , width: 2)
-              ) : null,
+            decoration: hasBorder
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.circular(radius ?? 0),
+                    border: Border.all(color: borderColor!, width: 2))
+                : null,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(radius ?? 0),
               child: Container(
                 color: imageType == ImageType.network ? colorCard : null,
                 child: Image(
-                    image: image(),
-                    height: size ?? height,
-                    width: size ?? width,
-                    fit: fit,
-                    color: tintColor,
-                  errorBuilder: (context, error, stackTrace) => const SizedBox(),
-                  ),
+                  image: image(),
+                  height: size ?? height,
+                  width: size ?? width,
+                  fit: fit,
+                  color: tintColor,
+                  errorBuilder: (context, error, stackTrace) =>
+                      const SizedBox(),
+                ),
               ),
-              ),
+            ),
           ),
-          Positioned.fill(child: TapWidget(onTap: onTap,))
+          Positioned.fill(
+              child: TapWidget(
+            onTap: onTap,
+          ))
         ],
       ),
     );
