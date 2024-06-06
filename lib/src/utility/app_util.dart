@@ -81,6 +81,32 @@ List<DropListModel> getQualificationList(){
   return list ;
 
 }
+List<DropListModel> getBloodGroupList(){
+  List<DropListModel> list = [];
+  list.add(DropListModel(name: "A+", id: "1"));
+  list.add(DropListModel(name: "A-", id: "2"));
+  list.add(DropListModel(name: "B+", id: "3"));
+  list.add(DropListModel(name: "B-", id: "4"));
+  list.add(DropListModel(name: "AB+", id: "5"));
+  list.add(DropListModel(name: "AB-", id: "6"));
+  list.add(DropListModel(name: "O+", id: "7"));
+  list.add(DropListModel(name: "O-", id: "8"));
+  return list;
+
+}
+
+List<DropListModel> getDisabilityTypeList() {
+  List<DropListModel> list = [];
+  list.add(DropListModel(name: "Physical Disability", id: "1"));
+  list.add(DropListModel(name: "Hearing Disability", id: "2"));
+  list.add(DropListModel(name: "Visual Disability", id: "3"));
+  list.add(DropListModel(name: "Speech Disability", id: "4"));
+  list.add(DropListModel(name: "Intellectual Disability", id: "5"));
+  list.add(DropListModel(name: "Learning Disability", id: "6"));
+  list.add(DropListModel(name: "Mental Illness", id: "7"));
+  list.add(DropListModel(name: "Multiple Disabilities", id: "8"));
+  return list;
+}
 List<DropListModel> getOccupationList(){
   List<DropListModel> list = [];
   list.add(DropListModel(name: "Doctor", id: "1"));
@@ -195,7 +221,7 @@ List<DropListModel> getOccupationList(){
 
 
 
-  
+
 
   return list ;
 

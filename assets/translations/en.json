@@ -97,6 +97,7 @@
     "gaurdianDetail": "Gaurdian Detail",
     "classDetail": "Class Detail",
     "bankDetail": "Bank Detail",
+    "addressDetail": "Address Detail",
     "gaurdianName": "Gaurdian Name",
     "gaurdianNameHere": "Gaurdian Name Here",
     "relationshipWithStudent": "Relationship with student",
@@ -107,7 +108,27 @@
     "accountNumber": "Account Number",
     "accountHolderName": "Account Holder Name",
     "timePeriodOfResidenceInState": "Time Period of Residence in State",
-    "skip": "skip"
+    "skip": "skip",
+    "villMohalla": "Vill / Mohalla",
+    "selectTehsil": "Select Tehsil",
+    "additionalInfo": "Additional Information",
+    "udisePen": "Udise Pen",
+    "selectBloodGroup": "Select Blood Group",
+
+    "studentWeight": "Student Weight (KG)",
+    "studentHeight": "Student height (CM)",
+    "disability": "Disability",
+    "disabilityPercent": "Disability %",
+    "selectDisabilityType": "Select Disability Type",
+    "noResult": "No Result",
+    "result": "Result",
+    "pass": "Pass",
+    "fail": "Fail",
+    "obtainMarks": "Obtain Marks",
+    "attendedDays": "Attended Days",
+    "male": "Male",
+    "female": "Female",
+    "other": "Other"
 
 
 }

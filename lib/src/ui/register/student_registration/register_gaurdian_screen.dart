@@ -13,7 +13,7 @@ import 'package:fl_school/src/data/blocs/pincode_bloc/pincode_bloc.dart';
 import 'package:fl_school/src/data/blocs/register_bloc/register_bloc.dart';
 import 'package:fl_school/src/data/models/pincode_model.dart';
 import 'package:fl_school/src/ui/register/parent_detail_screen.dart';
-import 'package:fl_school/src/ui/register/student_registration/register_three.dart';
+import 'package:fl_school/src/ui/register/student_registration/register_class_screen.dart';
 import 'package:fl_school/src/utility/app_util.dart';
 import 'package:fl_school/src/utility/decoration_util.dart';
 import 'package:fl_school/src/utility/validation_util.dart';
@@ -35,25 +35,22 @@ import 'package:fl_school/src/core/text_view.dart';
 import 'package:fl_school/src/extension/app_extension.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
 
-class RegisterTwo extends StatefulWidget {
-  RegisterTwo({super.key});
+class RegisterGaurdianScreen extends StatefulWidget {
+  RegisterGaurdianScreen({super.key});
 
   @override
-  State<RegisterTwo> createState() => _RegisterTwoState();
+  State<RegisterGaurdianScreen> createState() => _RegisterGaurdianScreenState();
 }
 
-class _RegisterTwoState extends State<RegisterTwo> {
+class _RegisterGaurdianScreenState extends State<RegisterGaurdianScreen> {
+  var stateController = TextEditingController(text: "");
+  var districtController = TextEditingController(text: "");
   var addressController = TextEditingController(text: "");
   var pincodeController = TextEditingController(text: "");
+  var nameController = TextEditingController(text: "");
+  var relationshipController = TextEditingController(text: "");
+  var mobileController = TextEditingController(text: "");
   var selectedPostOffice;
-  var nameControllerFather = TextEditingController(text: "");
-  var aadharControllerFather = TextEditingController(text: "");
-  var nameControllerMother = TextEditingController(text: "");
-  var aadharControllerMother = TextEditingController(text: "");
-  var occupationList = getOccupationList();
-  var qualificationList = getQualificationList();
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +66,7 @@ class _RegisterTwoState extends State<RegisterTwo> {
           ),
         ),
         title: TextView(
-          text: "parentDetail",
+          text: "gaurdianDetail",
           color: colorWhite,
           textSize: 16.sp,
           textAlign: TextAlign.center,
@@ -77,7 +74,25 @@ class _RegisterTwoState extends State<RegisterTwo> {
           fontFamily: Family.medium,
           lineHeight: 1.3,
         ),
-        actions: [],
+        actions: [
+          TapWidget(
+            onTap: (){
+              context.pushScreen(nextScreen: RegisterClassScreen());
+            },
+            child: Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: TextView(
+                text: "skip",
+                color: colorWhite,
+                textSize: 14.sp,
+                textAlign: TextAlign.center,
+                style: AppTextStyleEnum.medium,
+                fontFamily: Family.medium,
+                lineHeight: 1.3,
+              ),
+            ),
+          )
+        ],
       ),
       body: ListView(shrinkWrap: true, children: [
         Padding(
@@ -87,98 +102,46 @@ class _RegisterTwoState extends State<RegisterTwo> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               spaceVertical(space: 10.h),
-
-
               CustomTextField(
-                  controller: nameControllerFather,
+                  controller: nameController,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
                   paddingHorizontal: 20.0,
                   hasViewHight: false,
-                  labelText: "fatherName",
-                  hintText: "fatherNameHere",
+                  labelText: "gaurdianName",
+                  hintText: "gaurdianNameHere",
                   numberOfLines: 1,
                   hintFontWeight: FontWeight.w400,
                   hintTextColor: colorGray.withOpacity(0.6)),
               spaceVertical(space: 20.h),
               CustomTextField(
-                  controller: aadharControllerFather,
+                  controller: relationshipController,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.text,
+                  paddingHorizontal: 20.0,
+                  hasViewHight: false,
+                  labelText: "relationshipWithStudent",
+                  hintText: "relationshipWithStudent",
+                  numberOfLines: 1,
+                  hintFontWeight: FontWeight.w400,
+                  hintTextColor: colorGray.withOpacity(0.6)),
+              spaceVertical(space: 20.h),
+              CustomTextField(
+                  controller: mobileController,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   paddingHorizontal: 20.0,
                   hasViewHight: false,
                   inputFormatters: [
                     FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(12),
+                    LengthLimitingTextInputFormatter(10),
                   ],
-                  labelText: "fatherAadhaarNumber",
-                  hintText: "fatherAadhaarNumberHere",
+                  labelText: "mobileNumber",
+                  hintText: "mobileNumber",
                   numberOfLines: 1,
                   hintFontWeight: FontWeight.w400,
                   hintTextColor: colorGray.withOpacity(0.6)),
               spaceVertical(space: 20.h),
-              CustomDropdown<DropListModel>.search(
-                hintText: tr("selectOccupation"),
-                items: occupationList,
-                decoration: customDropdownDecoration,
-                excludeSelected: false,
-                onChanged: (item) {},
-              ),
-              spaceVertical(space: 20.h),
-              CustomDropdown<DropListModel>.search(
-                hintText: tr("selectQualification"),
-                items: qualificationList,
-                decoration: customDropdownDecoration,
-                excludeSelected: false,
-                onChanged: (item) {},
-              ),
-              spaceVertical(space: 20.h),
-
-              CustomTextField(
-                  controller: nameControllerMother,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.text,
-                  paddingHorizontal: 20.0,
-                  hasViewHight: false,
-                  labelText: "motherName",
-                  hintText: "motherNameHere",
-                  numberOfLines: 1,
-                  hintFontWeight: FontWeight.w400,
-                  hintTextColor: colorGray.withOpacity(0.6)),
-              spaceVertical(space: 20.h),
-              CustomTextField(
-                  controller: aadharControllerMother,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.number,
-                  paddingHorizontal: 20.0,
-                  hasViewHight: false,
-                  inputFormatters: [
-                    FilteringTextInputFormatter.digitsOnly,
-                    LengthLimitingTextInputFormatter(12),
-                  ],
-                  labelText: "motherAadhaarNumber",
-                  hintText: "motherAadhaarNumberHere",
-                  numberOfLines: 1,
-                  hintFontWeight: FontWeight.w400,
-                  hintTextColor: colorGray.withOpacity(0.6)),
-              spaceVertical(space: 20.h),
-              CustomDropdown<DropListModel>.search(
-                hintText: tr("selectOccupation"),
-                items: occupationList,
-                decoration: customDropdownDecoration,
-                excludeSelected: false,
-                onChanged: (item) {},
-              ),
-              spaceVertical(space: 20.h),
-              CustomDropdown<DropListModel>.search(
-                hintText: tr("selectQualification"),
-                items: qualificationList,
-                decoration: customDropdownDecoration,
-                excludeSelected: false,
-                onChanged: (item) {},
-              ),
-              spaceVertical(space: 20.h),
-
               BlocConsumer<PincodeBloc, PincodeState>(
                 listener: (context, state) {
                   if (state is PincodeError) {
@@ -216,18 +179,18 @@ class _RegisterTwoState extends State<RegisterTwo> {
                           hintTextColor: colorGray.withOpacity(0.6)),
                       state is PincodeLoading
                           ? Positioned(
-                              bottom: 10,
-                              top: 10,
-                              right: 10,
-                              child: SizedBox(
-                                width: 25.0.w,
-                                height: 30.0.h,
-                                child: CircularProgressIndicator(
-                                  strokeWidth: 3.0,
-                                  color: colorPrimary,
-                                ),
-                              ),
-                            )
+                        bottom: 10,
+                        top: 10,
+                        right: 10,
+                        child: SizedBox(
+                          width: 25.0.w,
+                          height: 30.0.h,
+                          child: CircularProgressIndicator(
+                            strokeWidth: 3.0,
+                            color: colorPrimary,
+                          ),
+                        ),
+                      )
                           : SizedBox.shrink(),
                     ],
                   );
@@ -236,20 +199,54 @@ class _RegisterTwoState extends State<RegisterTwo> {
               BlocBuilder<PincodeBloc, PincodeState>(
                 builder: (context, state) {
                   if (state is PincodeSuccess) {
+                    PostOffice postOffice = state.responseModel.data[0].postOffice[0] ;
+                    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>") ;
+                    stateController.text = postOffice.state ;
+                    districtController.text = postOffice.district ;
                     return Column(
                       children: [
                         spaceVertical(space: 20.h),
+                        CustomTextField(
+                            controller: stateController,
+                            textInputAction: TextInputAction.next,
+                            keyboardType: TextInputType.text,
+                            paddingHorizontal: 20.0,
+                            hasViewHight: false,
+                            readOnly: true,
+                            labelText: "state",
+                            hintText: "state",
+                            numberOfLines: 1,
+                            hintFontWeight: FontWeight.w400,
+                            hintTextColor: colorGray.withOpacity(0.6)),
+                        spaceVertical(space: 20.h),
+
+                        CustomTextField(
+                            controller: districtController,
+                            textInputAction: TextInputAction.next,
+                            keyboardType: TextInputType.text,
+                            paddingHorizontal: 20.0,
+                            hasViewHight: false,
+                            readOnly: true,
+                            labelText: "district",
+                            hintText: "district",
+                            numberOfLines: 1,
+                            hintFontWeight: FontWeight.w400,
+                            hintTextColor: colorGray.withOpacity(0.6)),
+                        spaceVertical(space: 20.h),
+
+
+
                         FormField<String>(
                           builder: (FormFieldState<String> s) {
                             return InputDecorator(
                               decoration: InputDecoration(
                                   contentPadding:
-                                      EdgeInsets.fromLTRB(12, 10, 20, 20),
+                                  EdgeInsets.fromLTRB(12, 10, 20, 20),
                                   errorStyle: TextStyle(
                                       color: Colors.redAccent, fontSize: 16.0),
                                   border: OutlineInputBorder(
                                       borderRadius:
-                                          BorderRadius.circular(10.0))),
+                                      BorderRadius.circular(10.0))),
                               child: DropdownButtonHideUnderline(
                                 child: DropdownButton<PostOffice>(
                                   style: TextStyle(
@@ -257,7 +254,7 @@ class _RegisterTwoState extends State<RegisterTwo> {
                                     color: Colors.grey,
                                   ),
                                   hint: Text(
-                                    "selectCity",
+                                    "selectTehsil",
                                     style: TextStyle(
                                       color: Colors.grey,
                                       fontSize: 16,
@@ -266,23 +263,23 @@ class _RegisterTwoState extends State<RegisterTwo> {
                                   items: state.responseModel.data[0].postOffice
                                       .map<DropdownMenuItem<PostOffice>>(
                                           (PostOffice value) {
-                                    return DropdownMenuItem(
-                                      value: value,
-                                      child: Row(
-                                        children: [
-                                          TextView(
-                                            text: "${value.name}",
-                                            color: colorGray,
-                                            textSize: 12.sp,
-                                            textAlign: TextAlign.center,
-                                            style: AppTextStyleEnum.medium,
-                                            fontFamily: Family.medium,
-                                            lineHeight: 1.3,
-                                          )
-                                        ],
-                                      ),
-                                    );
-                                  }).toList(),
+                                        return DropdownMenuItem(
+                                          value: value,
+                                          child: Row(
+                                            children: [
+                                              TextView(
+                                                text: "${value.name}",
+                                                color: colorGray,
+                                                textSize: 12.sp,
+                                                textAlign: TextAlign.center,
+                                                style: AppTextStyleEnum.medium,
+                                                fontFamily: Family.medium,
+                                                lineHeight: 1.3,
+                                              )
+                                            ],
+                                          ),
+                                        );
+                                      }).toList(),
                                   isExpanded: true,
                                   isDense: true,
                                   onChanged: (selectedItem) {
@@ -310,11 +307,15 @@ class _RegisterTwoState extends State<RegisterTwo> {
                   keyboardType: TextInputType.text,
                   paddingHorizontal: 20.0,
                   hasViewHight: false,
-                  labelText: "address",
-                  hintText: "addressHere",
+                  labelText: "villMohalla",
+                  hintText: "villMohalla",
                   numberOfLines: 1,
                   hintFontWeight: FontWeight.w400,
                   hintTextColor: colorGray.withOpacity(0.6)),
+              spaceVertical(space: 30.h),
+
+
+
               spaceVertical(space: 30.h),
               BlocConsumer<RegisterBloc, RegisterState>(
                 listener: (context, state) {
@@ -348,7 +349,7 @@ class _RegisterTwoState extends State<RegisterTwo> {
                     decoration: BoxDecoration(color: colorPrimary),
                     child: AppSimpleButton(
                       onDoneFuction: () async {
-                        context.pushScreen(nextScreen: RegisterThree()) ;
+                        context.pushScreen(nextScreen: RegisterClassScreen());
                       },
                       buttonBackgroundColor: colorPrimary,
                       nameText: "submit",
