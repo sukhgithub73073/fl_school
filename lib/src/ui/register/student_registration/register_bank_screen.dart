@@ -13,8 +13,8 @@ import 'package:fl_school/src/data/blocs/pincode_bloc/pincode_bloc.dart';
 import 'package:fl_school/src/data/blocs/register_bloc/register_bloc.dart';
 import 'package:fl_school/src/data/models/pincode_model.dart';
 import 'package:fl_school/src/ui/register/parent_detail_screen.dart';
-import 'package:fl_school/src/ui/register/student_registration/register_five.dart';
-import 'package:fl_school/src/ui/register/student_registration/register_three.dart';
+import 'package:fl_school/src/ui/register/student_registration/additional_info_screen.dart';
+import 'package:fl_school/src/ui/register/student_registration/register_gaurdian_screen.dart';
 import 'package:fl_school/src/utility/app_util.dart';
 import 'package:fl_school/src/utility/decoration_util.dart';
 import 'package:fl_school/src/utility/validation_util.dart';
@@ -36,18 +36,20 @@ import 'package:fl_school/src/core/text_view.dart';
 import 'package:fl_school/src/extension/app_extension.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
 
-class RegisterFour extends StatefulWidget {
-  RegisterFour({super.key});
+class RegisterBankScreen extends StatefulWidget {
+  RegisterBankScreen({super.key});
 
   @override
-  State<RegisterFour> createState() => _RegisterFourState();
+  State<RegisterBankScreen> createState() => _RegisterBankScreenState();
 }
 
-class _RegisterFourState extends State<RegisterFour> {
-  var nameController = TextEditingController(text: "");
-  var timeController = TextEditingController(text: "");
-  var selectedGroup;
-  var selectedClass;
+class _RegisterBankScreenState extends State<RegisterBankScreen> {
+  var bankNameController = TextEditingController(text: "");
+  var ifscController = TextEditingController(text: "");
+  var branchAddressController = TextEditingController(text: "");
+  var accountController = TextEditingController(text: "");
+  var holderNameController = TextEditingController(text: "");
+
 
 
   @override
@@ -64,7 +66,7 @@ class _RegisterFourState extends State<RegisterFour> {
           ),
         ),
         title: TextView(
-          text: "classDetail",
+          text: "bankDetail",
           color: colorWhite,
           textSize: 16.sp,
           textAlign: TextAlign.center,
@@ -72,7 +74,23 @@ class _RegisterFourState extends State<RegisterFour> {
           fontFamily: Family.medium,
           lineHeight: 1.3,
         ),
-        actions: [],
+        actions: [ TapWidget(
+          onTap: (){
+            context.pushScreen(nextScreen: AdditionalInfoScreen());
+          },
+          child: Padding(
+            padding: const EdgeInsets.only(right: 15),
+            child: TextView(
+              text: "skip",
+              color: colorWhite,
+              textSize: 14.sp,
+              textAlign: TextAlign.center,
+              style: AppTextStyleEnum.medium,
+              fontFamily: Family.medium,
+              lineHeight: 1.3,
+            ),
+          ),
+        )],
       ),
       body: ListView(shrinkWrap: true, children: [
         Padding(
@@ -85,83 +103,47 @@ class _RegisterFourState extends State<RegisterFour> {
 
 
               CustomTextField(
-                  controller: nameController,
+                  controller: bankNameController,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
                   paddingHorizontal: 20.0,
                   hasViewHight: false,
-                  labelText: "previousSchoolName",
-                  hintText: "previousSchoolName",
+                  labelText: "bankName",
+                  hintText: "bankName",
+                  numberOfLines: 1,
+                  hintFontWeight: FontWeight.w400,
+                  hintTextColor: colorGray.withOpacity(0.6)),
+              spaceVertical(space: 20.h),
+
+              CustomTextField(
+                  controller: ifscController,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.text,
+                  paddingHorizontal: 20.0,
+                  hasViewHight: false,
+                  labelText: "ifscCode",
+                  hintText: "ifscCode",
+                  numberOfLines: 1,
+                  hintFontWeight: FontWeight.w400,
+                  hintTextColor: colorGray.withOpacity(0.6)),
+              spaceVertical(space: 20.h),
+              CustomTextField(
+                  controller: branchAddressController,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.text,
+                  paddingHorizontal: 20.0,
+                  hasViewHight: false,
+                  labelText: "branchAddress",
+                  hintText: "branchAddress",
                   numberOfLines: 1,
                   hintFontWeight: FontWeight.w400,
                   hintTextColor: colorGray.withOpacity(0.6)),
               spaceVertical(space: 20.h),
 
 
-              BlocConsumer<GroupsBloc, GroupsState>(
-                listener: (context, state) {},
-                builder: (context, state) {
-                  if (state is GroupsSuccess) {
-                    printLog(
-                        "builder >>>>>>>>>>>>>>>>>${state is GroupsSuccess}");
-                    List<DropListModel> list = [];
-                    state.responseModel.data.forEach((element) {
-                      list.add(DropListModel(
-                          id: "${element["group_id"]}",
-                          name: "${element["group_name"]}"));
-                    });
-                    return CustomDropdown<DropListModel>.search(
-                      hintText: tr("selectGroup"),
-                      items: list,
-                      excludeSelected: false,
-                      decoration: customDropdownDecoration,
-                      onChanged: (item) {
-                        selectedGroup = item;
-                        context
-                            .read<ClassesBloc>()
-                            .add(GetClassesByGroupEvent(map: {
-                          "school_code": "GSSS19543",
-                          "group_id": item.id ?? "",
-                        }));
-                      },
-                    );
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                },
-              ),
-              spaceVertical(space: 10.h),
-              BlocConsumer<ClassesBloc, ClassesState>(
-                listener: (context, state) {},
-                builder: (context, state) {
-                  if (state is ClassesGetSuccess) {
-                    printLog(
-                        "builder >>>>>>>>>>>>>>>>>${state is GroupsSuccess}");
-                    List<DropListModel> list = [];
-                    state.responseModel.data.forEach((element) {
-                      list.add(DropListModel(
-                          id: "${element["class_id"]}",
-                          name: "${element["class_name"]}"));
-                    });
-                    return CustomDropdown<DropListModel>.search(
-                      hintText: tr("selectClass"),
-                      items: list,
-                      decoration: customDropdownDecoration,
-                      excludeSelected: false,
-                      onChanged: (item) {
-                        selectedClass = item;
-                      },
-                    );
-                  } else {
-                    return SizedBox.shrink();
-                  }
-                },
-              ),
-              spaceVertical(space: 20.h),
-
 
               CustomTextField(
-                  controller: timeController,
+                  controller: accountController,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   paddingHorizontal: 20.0,
@@ -170,13 +152,24 @@ class _RegisterFourState extends State<RegisterFour> {
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(12),
                   ],
-                  labelText: "timePeriodOfResidenceInState",
-                  hintText: "timePeriodOfResidenceInState",
+                  labelText: "accountNumber",
+                  hintText: "accountNumber",
                   numberOfLines: 1,
                   hintFontWeight: FontWeight.w400,
                   hintTextColor: colorGray.withOpacity(0.6)),
               spaceVertical(space: 20.h),
-
+              CustomTextField(
+                  controller: holderNameController,
+                  textInputAction: TextInputAction.next,
+                  keyboardType: TextInputType.text,
+                  paddingHorizontal: 20.0,
+                  hasViewHight: false,
+                  labelText: "accountHolderName",
+                  hintText: "accountHolderName",
+                  numberOfLines: 1,
+                  hintFontWeight: FontWeight.w400,
+                  hintTextColor: colorGray.withOpacity(0.6)),
+              spaceVertical(space: 40.h),
 
               BlocConsumer<RegisterBloc, RegisterState>(
                 listener: (context, state) {
@@ -210,7 +203,7 @@ class _RegisterFourState extends State<RegisterFour> {
                     decoration: BoxDecoration(color: colorPrimary),
                     child: AppSimpleButton(
                       onDoneFuction: () async {
-                        context.pushScreen(nextScreen: RegisterFive()) ;
+                        context.pushScreen(nextScreen: AdditionalInfoScreen());
                       },
                       buttonBackgroundColor: colorPrimary,
                       nameText: "submit",

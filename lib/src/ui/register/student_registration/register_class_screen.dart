@@ -13,7 +13,8 @@ import 'package:fl_school/src/data/blocs/pincode_bloc/pincode_bloc.dart';
 import 'package:fl_school/src/data/blocs/register_bloc/register_bloc.dart';
 import 'package:fl_school/src/data/models/pincode_model.dart';
 import 'package:fl_school/src/ui/register/parent_detail_screen.dart';
-import 'package:fl_school/src/ui/register/student_registration/register_three.dart';
+import 'package:fl_school/src/ui/register/student_registration/register_bank_screen.dart';
+import 'package:fl_school/src/ui/register/student_registration/register_gaurdian_screen.dart';
 import 'package:fl_school/src/utility/app_util.dart';
 import 'package:fl_school/src/utility/decoration_util.dart';
 import 'package:fl_school/src/utility/validation_util.dart';
@@ -35,20 +36,18 @@ import 'package:fl_school/src/core/text_view.dart';
 import 'package:fl_school/src/extension/app_extension.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
 
-class RegisterFive extends StatefulWidget {
-  RegisterFive({super.key});
+class RegisterClassScreen extends StatefulWidget {
+  RegisterClassScreen({super.key});
 
   @override
-  State<RegisterFive> createState() => _RegisterFiveState();
+  State<RegisterClassScreen> createState() => _RegisterClassScreenState();
 }
 
-class _RegisterFiveState extends State<RegisterFive> {
-  var bankNameController = TextEditingController(text: "");
-  var ifscController = TextEditingController(text: "");
-  var branchAddressController = TextEditingController(text: "");
-  var accountController = TextEditingController(text: "");
-  var holderNameController = TextEditingController(text: "");
-
+class _RegisterClassScreenState extends State<RegisterClassScreen> {
+  var nameController = TextEditingController(text: "");
+  var timeController = TextEditingController(text: "");
+  var selectedGroup;
+  var selectedClass;
 
 
   @override
@@ -65,7 +64,7 @@ class _RegisterFiveState extends State<RegisterFive> {
           ),
         ),
         title: TextView(
-          text: "bankDetail",
+          text: "classDetail",
           color: colorWhite,
           textSize: 16.sp,
           textAlign: TextAlign.center,
@@ -73,23 +72,7 @@ class _RegisterFiveState extends State<RegisterFive> {
           fontFamily: Family.medium,
           lineHeight: 1.3,
         ),
-        actions: [ TapWidget(
-          onTap: (){
-
-          },
-          child: Padding(
-            padding: const EdgeInsets.only(right: 15),
-            child: TextView(
-              text: "skip",
-              color: colorWhite,
-              textSize: 14.sp,
-              textAlign: TextAlign.center,
-              style: AppTextStyleEnum.medium,
-              fontFamily: Family.medium,
-              lineHeight: 1.3,
-            ),
-          ),
-        )],
+        actions: [],
       ),
       body: ListView(shrinkWrap: true, children: [
         Padding(
@@ -102,47 +85,83 @@ class _RegisterFiveState extends State<RegisterFive> {
 
 
               CustomTextField(
-                  controller: bankNameController,
+                  controller: nameController,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.text,
                   paddingHorizontal: 20.0,
                   hasViewHight: false,
-                  labelText: "bankName",
-                  hintText: "bankName",
-                  numberOfLines: 1,
-                  hintFontWeight: FontWeight.w400,
-                  hintTextColor: colorGray.withOpacity(0.6)),
-              spaceVertical(space: 20.h),
-
-              CustomTextField(
-                  controller: ifscController,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.text,
-                  paddingHorizontal: 20.0,
-                  hasViewHight: false,
-                  labelText: "ifscCode",
-                  hintText: "ifscCode",
-                  numberOfLines: 1,
-                  hintFontWeight: FontWeight.w400,
-                  hintTextColor: colorGray.withOpacity(0.6)),
-              spaceVertical(space: 20.h),
-              CustomTextField(
-                  controller: branchAddressController,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.text,
-                  paddingHorizontal: 20.0,
-                  hasViewHight: false,
-                  labelText: "branchAddress",
-                  hintText: "branchAddress",
+                  labelText: "previousSchoolName",
+                  hintText: "previousSchoolName",
                   numberOfLines: 1,
                   hintFontWeight: FontWeight.w400,
                   hintTextColor: colorGray.withOpacity(0.6)),
               spaceVertical(space: 20.h),
 
 
+              BlocConsumer<GroupsBloc, GroupsState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  if (state is GroupsSuccess) {
+                    printLog(
+                        "builder >>>>>>>>>>>>>>>>>${state is GroupsSuccess}");
+                    List<DropListModel> list = [];
+                    state.responseModel.data.forEach((element) {
+                      list.add(DropListModel(
+                          id: "${element["group_id"]}",
+                          name: "${element["group_name"]}"));
+                    });
+                    return CustomDropdown<DropListModel>.search(
+                      hintText: tr("selectGroup"),
+                      items: list,
+                      excludeSelected: false,
+                      decoration: customDropdownDecoration,
+                      onChanged: (item) {
+                        selectedGroup = item;
+                        context
+                            .read<ClassesBloc>()
+                            .add(GetClassesByGroupEvent(map: {
+                          "school_code": "GSSS19543",
+                          "group_id": item.id ?? "",
+                        }));
+                      },
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
+              ),
+              spaceVertical(space: 10.h),
+              BlocConsumer<ClassesBloc, ClassesState>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  if (state is ClassesGetSuccess) {
+                    printLog(
+                        "builder >>>>>>>>>>>>>>>>>${state is GroupsSuccess}");
+                    List<DropListModel> list = [];
+                    state.responseModel.data.forEach((element) {
+                      list.add(DropListModel(
+                          id: "${element["class_id"]}",
+                          name: "${element["class_name"]}"));
+                    });
+                    return CustomDropdown<DropListModel>.search(
+                      hintText: tr("selectClass"),
+                      items: list,
+                      decoration: customDropdownDecoration,
+                      excludeSelected: false,
+                      onChanged: (item) {
+                        selectedClass = item;
+                      },
+                    );
+                  } else {
+                    return SizedBox.shrink();
+                  }
+                },
+              ),
+              spaceVertical(space: 20.h),
+
 
               CustomTextField(
-                  controller: accountController,
+                  controller: timeController,
                   textInputAction: TextInputAction.next,
                   keyboardType: TextInputType.number,
                   paddingHorizontal: 20.0,
@@ -151,24 +170,13 @@ class _RegisterFiveState extends State<RegisterFive> {
                     FilteringTextInputFormatter.digitsOnly,
                     LengthLimitingTextInputFormatter(12),
                   ],
-                  labelText: "accountNumber",
-                  hintText: "accountNumber",
+                  labelText: "timePeriodOfResidenceInState",
+                  hintText: "timePeriodOfResidenceInState",
                   numberOfLines: 1,
                   hintFontWeight: FontWeight.w400,
                   hintTextColor: colorGray.withOpacity(0.6)),
               spaceVertical(space: 20.h),
-              CustomTextField(
-                  controller: holderNameController,
-                  textInputAction: TextInputAction.next,
-                  keyboardType: TextInputType.text,
-                  paddingHorizontal: 20.0,
-                  hasViewHight: false,
-                  labelText: "accountHolderName",
-                  hintText: "accountHolderName",
-                  numberOfLines: 1,
-                  hintFontWeight: FontWeight.w400,
-                  hintTextColor: colorGray.withOpacity(0.6)),
-              spaceVertical(space: 40.h),
+
 
               BlocConsumer<RegisterBloc, RegisterState>(
                 listener: (context, state) {
@@ -202,15 +210,7 @@ class _RegisterFiveState extends State<RegisterFive> {
                     decoration: BoxDecoration(color: colorPrimary),
                     child: AppSimpleButton(
                       onDoneFuction: () async {
-                        appDialog(
-                            context: context,
-                            child: SuccessDailog(
-                              title: "successfully",
-                              onTap: () {
-                                context.back();
-                              },
-                              message: "Successfully student register",
-                            ));
+                        context.pushScreen(nextScreen: RegisterBankScreen()) ;
                       },
                       buttonBackgroundColor: colorPrimary,
                       nameText: "submit",

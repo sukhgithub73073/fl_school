@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:fl_school/src/ui/register/student_registration/register_two.dart';
+import 'package:fl_school/src/ui/register/student_registration/register_parent.dart';
 import 'package:flutter/material.dart';
 import 'package:animated_custom_dropdown/custom_dropdown.dart';
 import 'package:fl_school/src/core/app_assets.dart';
@@ -35,6 +35,7 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:fl_school/src/core/text_view.dart';
 import 'package:fl_school/src/extension/app_extension.dart';
 import 'package:radio_group_v2/radio_group_v2.dart';
+
 class RegisterOne extends StatefulWidget {
   const RegisterOne({super.key});
 
@@ -90,13 +91,13 @@ class _RegisterOneState extends State<RegisterOne> {
                                     return CircleAvatar(
                                       radius: 100,
                                       backgroundImage:
-                                      FileImage(File(state.file.path)),
+                                          FileImage(File(state.file.path)),
                                     );
                                   } else {
                                     return CircleAvatar(
                                       radius: 100,
                                       backgroundImage:
-                                      AssetImage(AppAssets.logo),
+                                          AssetImage(AppAssets.logo),
                                     );
                                   }
                                 }
@@ -160,7 +161,7 @@ class _RegisterOneState extends State<RegisterOne> {
                                               ? colorPrimary
                                               : colorWhite,
                                           borderRadius:
-                                          BorderRadius.circular(10)),
+                                              BorderRadius.circular(10)),
                                       child: Center(
                                         child: TextView(
                                           text: "newAddmission",
@@ -191,7 +192,7 @@ class _RegisterOneState extends State<RegisterOne> {
                                               ? colorPrimary
                                               : colorWhite,
                                           borderRadius:
-                                          BorderRadius.circular(10)),
+                                              BorderRadius.circular(10)),
                                       child: Center(
                                         child: TextView(
                                           text: "oldAddmission",
@@ -212,7 +213,6 @@ class _RegisterOneState extends State<RegisterOne> {
                             ),
                           ),
                           spaceVertical(space: 20.h),
-
                           if (admissionType == "old") ...[
                             CustomTextField(
                                 controller: srnoController,
@@ -227,7 +227,6 @@ class _RegisterOneState extends State<RegisterOne> {
                                 hintTextColor: colorGray.withOpacity(0.6)),
                             spaceVertical(space: 20.h),
                           ],
-
                           CustomTextField(
                               controller: nameController,
                               textInputAction: TextInputAction.next,
@@ -276,7 +275,7 @@ class _RegisterOneState extends State<RegisterOne> {
                             alignment: Alignment.centerLeft,
                             child: RadioGroup(
                               controller: myController,
-                              values: ["Male", "Female", "Other"],
+                              values: [tr("male"), tr("female"), tr("other")],
                               indexOfDefault: 0,
                               orientation: RadioGroupOrientation.horizontal,
                               decoration: RadioGroupDecoration(
@@ -297,31 +296,30 @@ class _RegisterOneState extends State<RegisterOne> {
                             onChanged: (item) {},
                           ),
                           spaceVertical(space: 20.h),
-                          Row(children: [
-                            Expanded(
-                              child: CustomDropdown<DropListModel>.search(
-                                hintText: tr("selectCaste"),
-                                items: getCasteList(),
-                                decoration: customDropdownDecoration,
-                                excludeSelected: false,
-                                onChanged: (item) {},
+                          Row(
+                            children: [
+                              Expanded(
+                                child: CustomDropdown<DropListModel>.search(
+                                  hintText: tr("selectCaste"),
+                                  items: getCasteList(),
+                                  decoration: customDropdownDecoration,
+                                  excludeSelected: false,
+                                  onChanged: (item) {},
+                                ),
                               ),
-                            ),
-                            spaceHorizontal(space: 10.w),
-                            Expanded(
-                              child: CustomDropdown<DropListModel>.search(
-                                hintText: tr("selectSubCaste"),
-                                items: getSubCasteList(),
-                                decoration: customDropdownDecoration,
-                                excludeSelected: false,
-                                onChanged: (item) {},
+                              spaceHorizontal(space: 10.w),
+                              Expanded(
+                                child: CustomDropdown<DropListModel>.search(
+                                  hintText: tr("selectSubCaste"),
+                                  items: getSubCasteList(),
+                                  decoration: customDropdownDecoration,
+                                  excludeSelected: false,
+                                  onChanged: (item) {},
+                                ),
                               ),
-                            ),
-                          ],) ,
-
+                            ],
+                          ),
                           spaceVertical(space: 20.h),
-
-
                           spaceVertical(space: 30.h),
                           BlocConsumer<RegisterBloc, RegisterState>(
                             listener: (context, state) {
@@ -355,7 +353,8 @@ class _RegisterOneState extends State<RegisterOne> {
                                 decoration: BoxDecoration(color: colorPrimary),
                                 child: AppSimpleButton(
                                   onDoneFuction: () async {
-                                    context.pushScreen(nextScreen: RegisterTwo());
+                                    context.pushScreen(
+                                        nextScreen: RegisterParent());
                                   },
                                   buttonBackgroundColor: colorPrimary,
                                   nameText: "submit",
